@@ -5,31 +5,35 @@
 }
 
 <h1>View Roles</h1>
-<div>
-    <a asp-action="Create">Create Roles</a>
+<div class="roles-container">
+    <a asp-action="Create" class="btn-create-role">Create Roles</a>
 </div>
-<table class="myTableRoles">
-    <thead>
-        <tr>
-            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Id)</th>
-            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Name)</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
+
+<div class="roles-table-wrapper">
+    <table class="roles-table">
+        <thead>
             <tr>
-                <td>@item.Id</td>
-                <td>@item.Name</td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                </td>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Actions</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Id</td>
+                    <td>@item.Name</td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="action-link edit">Edit</a>
+@*                         <a asp-action="Details" asp-route-id="@item.Id" class="action-link details">Details</a>
+ *@                        <a asp-action="Delete" asp-route-id="@item.Id" class="action-link delete">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
 
 

@@ -163,129 +163,73 @@
  *@
 
 
+@* General Event Categories
+Conferences
 
-@* 
-<h1>Events</h1>
-
-<p>
-    <div class="container-fluid d-flex justify-content-between">
-        <a class="btn btn-primary" asp-action="Create">Create New</a>
-        <nav class="navbar bg-body-tertiary">
-            <div class="container-fluid">
-               
-                <form asp-action="Index" method="get" asp-controller="Eventstables">
-                    <table>
-                        <tr>
-                            <td>
-                                <span><b>Search By:</b></span>
-                                @Html.RadioButton("searchBy", "EventName", true) <text>Event Name</text>
-                                @Html.RadioButton("searchBy", "BookingUserName") <text>User Booking Name</text>
-                            </td>
-
-                        </tr>
-                        <tr>
-                            <td>
-                                @Html.TextBox("SearchValue", null, new { @class = "form-control", Placeholder = "Search by name/user" })
-                            </td>
-                            <td>
-                                <input type="submit" value="Search" class="btn btn-success" />
-                            </td>
-                        </tr>
-                    </table>
-                </form>
-            </div>
-        </nav>
-    </div>
-</p>
-
-<hr />
-@foreach (var item in Model)
-{
-    <span style="display: inline; gap: 15px;">
-        <span style ="display: inline; gap: 15px;">
-            <img src="@("/image/"+ item.ImageName)" asp-append-version="true" height="250px" />
-        </span>
-    </span>
-}
+Business Conferences
+Academic Symposia
+Trade Shows
 
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.EventName)
-            </th>
-             <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.StartDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.EndDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Venue)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Status)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.BookingUserName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Category)
-            </th>
-            <td class="col-sm-2">
-                @Html.DisplayNameFor(model => model.ImageName)
-            </td>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @if (Model != null && Model.Any())
-        {
-            @foreach (var item in Model) {
-                    <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.EventName)
-                        </td>
-                         <td>
-                            @Html.DisplayFor(modelItem => item.Description)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.StartDate)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.EndDate)
-                        </td>
-                            <td>@item.Venue</td>
-                            <td>@item.Status</td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.BookingUserName)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Category.Category)
-                        </td>
-                        <td class="col-sm-2">
-                            @Html.DisplayNameFor(model => item.ImageName)
-                        </td>
-                        <td class="col-sm-10">
-                            @Html.DisplayFor(model => item.ImageName)
-                        </td>
-                        <td>
-                            <a asp-action="Edit" asp-route-id="@item.EventId">Edit</a> |
-                            <a asp-action="Details" asp-route-id="@item.EventId">Details</a> |
-                            <a asp-action="Delete" asp-route-id="@item.EventId">Delete</a>
-                        </td>
-                    </tr>
-            }
-    }
-        else
-        {
-            <tr>
-                <td colspan="8">No events available.</td>
-            </tr>
-        }
-    </tbody>
-</table> *@
+Workshops
+
+Skill Development Workshops
+Corporate Training
+Educational Seminars
+
+
+Social Gatherings
+
+Weddings
+Birthdays
+Anniversaries
+
+
+Sports Events
+
+Tournaments
+Marathons
+Esports Competitions
+
+
+Entertainment
+
+Concerts
+Comedy Shows
+Theater Performances
+
+
+Festivals
+
+Music Festivals
+Food and Drink Festivals
+Cultural Festivals
+
+
+Fundraisers
+
+Charity Galas
+Crowdfunding Events
+Auctions
+
+
+Corporate Events
+
+Product Launches
+Networking Events
+Company Retreats
+
+
+Educational
+
+Lectures
+Panel Discussions
+Webinars
+
+
+Virtual Events
+
+Online Conferences
+Virtual Networking
+Remote Training Sessions
+ *@

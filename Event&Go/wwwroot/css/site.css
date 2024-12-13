@@ -1231,6 +1231,7 @@ input[type="email"], select {
 @media (max-width: 768px) {
     .login-container-box {
         padding: 15px;
+        margin:20px;
     }
 
     .login-form-box h2 {
