@@ -1,0 +1,71 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Event_Go</title>
+@*     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+ *@     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+     <link rel="stylesheet" href="~/js/site.js" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Event_Go.styles.css" asp-append-version="true" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+</head>
+<body>
+    <header>
+        <nav class="header-navbar">
+            <div class="container-navbar">
+                <!-- Logo/Brand -->
+                <a class="home-link" asp-area="" asp-controller="Home" asp-action="Index">
+                    <span class="brand-logo">🌟</span> Event&Go
+                </a>
+
+                <!-- Hamburger Menu (For Small Screens) -->
+                <div class="hamburger-menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+
+                <!-- Navigation Links -->
+                <div class="navbar-redirect-links">
+                    <ul class="unordered-links">
+                        <li class="link-bar-items">
+                            <a class="myLinks-bar" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        <li class="link-bar-items">
+                            <a class="myLinks-bar" asp-area="" asp-controller="Eventstables" asp-action="Index">Events</a>
+                        </li>
+                        <li class="link-bar-items">
+                            <a class="myLinks-bar" asp-area="" asp-controller="Event_category" asp-action="Index">Categories</a>
+                        </li>
+                        <li class="link-bar-items">
+                            <a class="myLinks-bar" asp-area="" asp-controller="AppRoles" asp-action="Index">Roles</a>
+                        </li>
+                        <!-- Login Section -->
+                        <partial name="_LoginPartial" />
+                    </ul>
+                    
+                </div>
+        
+            </div>
+        </nav>
+
+    </header>
+    <div class="containers">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2024 - Event_Go - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

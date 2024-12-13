@@ -1,0 +1,48 @@
+﻿@model WebApp.Models.Eventstable
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<div class="details-page">
+    <div class="details-card">
+        <div class="image-container">
+            <img src="@(Model.ImageName)" alt="Event Image" class="event-image" />
+        </div>
+        <div class="details-content">
+            <h2 class="event-title">@Model.EventName</h2>
+            <p class="event-description">@Model.Description</p>
+
+            <div class="info-group">
+                <div class="info-item">
+                    <label>Start Date:</label>
+                    <span>@Model.StartDate.ToString("MMMM dd, yyyy")</span>
+                </div>
+                <div class="info-item">
+                    <label>End Date:</label>
+                    <span>@Model.EndDate.ToString("MMMM dd, yyyy")</span>
+                </div>
+                <div class="info-item">
+                    <label>Venue:</label>
+                    <span>@Model.Venue</span>
+                </div>
+                <div class="info-item">
+                    <label>Status:</label>
+                    <span class="status-bar @Model.Status.ToLower()">@Model.Status</span>
+                </div>
+                <div class="info-item">
+                    <label>Category:</label>
+                    <span>@Model.Category.Category</span>
+                </div>
+                <div class="info-item">
+                    <label>Booked By:</label>
+                    <span>@Model.BookingUserName</span>
+                </div>
+            </div>
+        </div>
+        <div class="actions">
+            <a asp-action="Edit" asp-route-id="@Model?.EventId" class="btn-mode edit-btn">Edit</a>
+            <a asp-action="Index" class="btn-mode bk-btn">Back to List</a>
+        </div>
+    </div>
+</div>

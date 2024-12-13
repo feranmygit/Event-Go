@@ -1,0 +1,54 @@
+﻿@model Event_Go.Models.RegisterM
+
+<div class="register-page">
+    <!-- Left Container (Optional promotional content or background) -->
+    <div class="left-container">
+        <div class="left-content">
+            <h2>Welcome to the Event Management Platform!</h2>
+            <p>Start organizing, managing, and exploring events like never before. Register today and unlock powerful tools to help you create seamless event experiences.</p>
+        </div>
+    </div>
+
+    <!-- Right Container (Register Form) -->
+    <div class="right-container">
+        <div class="register-card">
+            <h2 class="register-title">Register</h2>
+            <form asp-action="Register" method="post" class="register-form">
+                <div asp-validation-summary="ModelOnly" class="text-danger validation-summary"></div>
+
+                <!-- Email -->
+                <div class="form-group">
+                    <label asp-for="Email" class="form-label">Email</label>
+                    <input asp-for="Email" class="form-control" placeholder="Enter your email" />
+                    <span asp-validation-for="Email" class="text-danger validation-message"></span>
+                </div>
+
+                <!-- Password -->
+                <div class="form-group">
+                    <label asp-for="Password" class="form-label">Password</label>
+                    <input asp-for="Password" class="form-control" type="password" placeholder="Create a password" />
+                    <span asp-validation-for="Password" class="text-danger validation-message"></span>
+                </div>
+
+                <!-- Confirm Password -->
+                <div class="form-group">
+                    <label asp-for="ConfirmPassword" class="form-label">Confirm Password</label>
+                    <input asp-for="ConfirmPassword" class="form-control" type="password" placeholder="Confirm your password" />
+                    <span asp-validation-for="ConfirmPassword" class="text-danger validation-message"></span>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="form-submit">
+                    <button type="submit" class="btn-primary btn-sub btn-width">Register</button>
+                </div>
+
+                <!-- Login Section -->
+                <div class="login-section">
+                    <p>Already have an account?</p>
+                    <a asp-action="Login" class="reg-color">Login</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+

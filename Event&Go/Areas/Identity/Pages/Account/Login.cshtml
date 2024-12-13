@@ -1,0 +1,56 @@
+﻿@page
+@model LoginModel
+
+@{
+    ViewData["Title"] = "Log in";
+}
+
+<div class="log-in-box">
+    <div class="login-container-box">
+        <div class="login-form-box">
+            <form id="account" method="post">
+                <h2>Log In</h2>
+                <hr />
+                <div asp-validation-summary="ModelOnly" role="alert" class="validation-summary"></div>
+
+                <div class="form-group-box">
+                    <input asp-for="Input.Email" autocomplete="username" aria-required="true" />
+                    <label asp-for="Input.Email">Email</label>
+                    <span asp-validation-for="Input.Email" class="validation-message"></span>
+                </div>
+
+                <div class="form-group-box">
+                    <input asp-for="Input.Password" autocomplete="current-password" aria-required="true" />
+                    <label asp-for="Input.Password">Password</label>
+                    <span asp-validation-for="Input.Password" class="validation-message"></span>
+                </div>
+
+                <div class="form-group-box checkbox-group-box">
+                    <label>
+                        <input asp-for="Input.RememberMe" />
+                        Remember Me
+                    </label>
+                </div>
+
+            
+
+                <div class="form-links-box">
+                    <div class="form-group-box">
+                        <button id="login-submit" type="submit" class="btn-submit-box">Log in</button>
+                    </div>
+                    <p><a id="forgot-password" asp-page="./ForgotPassword">Forgot your password?</a></p>
+                    <p><a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a></p>
+                    <p><a id="resend-confirmation" asp-page="./ResendEmailConfirmation">Resend email confirmation</a></p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

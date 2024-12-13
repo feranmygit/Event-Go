@@ -1,0 +1,291 @@
+﻿@model IEnumerable<WebApp.Models.Eventstable>
+
+
+@{
+    ViewData["Title"] = "Events";
+}
+<div class="all-padding">
+<div class="image-slider-container">
+    <div class="image-slider">
+        <img src="~/image-animate/3oqqafoi.png" alt="Image 1">
+        <img src="~/image-animate/m6s17abs.png" alt="Image 2" />
+        <img src="~/image-animate/se15fc7e.png" alt="Image 3" />
+        <img src="~/image-animate/ptjbrueq.png" alt="Image 4" />
+    </div>
+
+    <!-- Navigation Buttons -->
+    <button class="slider-nav prev" onclick="prevSlide()">&#10094;</button>
+    <button class="slider-nav next" onclick="nextSlide()">&#10095;</button>
+
+    <!-- Dots for Indicators -->
+    <div class="dots-container">
+        <span class="dot" onclick="goToSlide(0)"></span>
+        <span class="dot" onclick="goToSlide(1)"></span>
+        <span class="dot" onclick="goToSlide(2)"></span>
+        <span class="dot" onclick="goToSlide(3)"></span>
+    </div>
+</div>
+
+
+
+
+
+
+    <div class="Event-blog">
+        <h1 class="Event-title">Explore Upcoming Events</h1>
+    </div>
+
+    <header class="card-Statistics">
+    <h1 style="text-align: center; padding: 20px; color: #333;">Event Status Dashboard</h1>
+</header>
+
+<main>
+    <div class="dashboard">
+        <!-- Upcoming Events Card -->
+        <div class="card-grid upcoming">
+            <h2>@ViewBag.UpcomingCount</h2>
+            <p>Upcoming Events</p>
+        </div>
+
+        <!-- Ongoing Events Card -->
+        <div class="card-grid ongoing">
+            <h2>@ViewBag.OngoingCount</h2>
+            <p>Ongoing Events</p>
+        </div>
+
+        <!-- Planned Events Card -->
+        <div class="card-grid planned">
+            <h2>@ViewBag.PlannedCount</h2>
+            <p>Planned Events</p>
+        </div>
+
+        <!-- Cancelled Events Card -->
+        <div class="card-grid cancelled">
+            <h2>@ViewBag.CancelledCount</h2>
+            <p>Cancelled Events</p>
+        </div>
+    </div>
+</main>
+
+<div class="create-content">
+    <div class="search-cont-box">
+            <div class="top-section">
+                <!-- Create Event Button -->
+                <a class="create-btn" asp-action="Create">+ Create New Event</a>
+
+                <!-- Search Form -->
+                <form asp-action="Index" method="get" asp-controller="Eventstables" class="search-form">
+                    <div class="search-options">
+                        <label for="searchBy" class="search-label">Search By:</label>
+                        <div class="radio-group">
+                            <input type="radio" class="btn-check" name="searchBy" id="searchByEvent" value="EventName" checked>
+                            <label class="radio-label" for="searchByEvent">Event Name</label>
+
+                            <input type="radio" class="btn-check" name="searchBy" id="searchByUser" value="BookingUserName">
+                            <label class="radio-label" for="searchByUser">User Booking Name</label>
+                        </div>
+                    </div>
+                    <div class="search-box">
+                        <input type="text" id="SearchValue" name="SearchValue" placeholder="Search events or users" class="search-input">
+                    </div>
+                    <button type="submit" class="search-btn">Search</button>
+                </form>
+            </div>
+        </div>
+
+
+<div class="Event-header">
+    <h1>Events</h1>
+</div>
+<div class="row card-container">
+        @if (Model != null && Model.Any()){
+            @foreach (var item in Model)
+            {
+                <div class="card-contai">
+                    <div class="col-md-4 mb-4">
+                        <div class="card event-card" onclick="redirectToDetails(@item.EventId)">
+                            <div class="card-image">
+                                    <img src="@(item.ImageName)" alt="Event Image" class="img-fluid event-img">
+                                <div class="status @item.Status.ToLower()">@item.Status</div>
+                            </div>
+
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between mb-2 venue-cont">
+                                    <span class="category">@item.Category.Category</span>
+                                    <div class="venue-label">
+                                        <label class="card-text">Venue:</label>
+                                        <span class="venue">@item.Venue</span>
+                                    </div>
+                                </div>
+
+                                <h5 class="card-title event-name">@item.EventName</h5>
+
+                                <p class="card-text event-description">@item.Description</p>
+
+                                <p class="booking-username">Booked by: @item.BookingUserName</p>
+
+                                    <div class="action-icons d-flex justify-content-around">
+                                        <a asp-action="Edit" asp-route-id="@item.EventId" class="action-icon" title="Edit">
+                                            <span class="material-symbols-outlined">edit_square</span>
+                                            <span class="preview">Edit</span>
+                                        </a>
+                                        <a asp-action="Details" asp-route-id="@item.EventId" class="action-icon" title="Details">
+                                            <span class="material-symbols-outlined">info</span>
+                                            <span class="preview">Details</span>
+                                        </a>
+                                        <a asp-action="Delete" asp-route-id="@item.EventId" class="action-icon" title="Delete">
+                                            <span class="material-symbols-outlined">delete</span>
+                                            <span class="preview">Delete</span>
+                                        </a>
+                                    </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Repeat the above card for other items -->
+                </div>
+
+
+            }
+
+        }
+        else
+        {
+            <div>
+                <p>No events available.</p>
+            </div>
+        }
+    </div>
+
+</div>
+</div>
+@*     make corrections to it and let it be responsive across all screen devices from mobile 300px upward, it should be responsive
+ *@
+
+
+
+@* 
+<h1>Events</h1>
+
+<p>
+    <div class="container-fluid d-flex justify-content-between">
+        <a class="btn btn-primary" asp-action="Create">Create New</a>
+        <nav class="navbar bg-body-tertiary">
+            <div class="container-fluid">
+               
+                <form asp-action="Index" method="get" asp-controller="Eventstables">
+                    <table>
+                        <tr>
+                            <td>
+                                <span><b>Search By:</b></span>
+                                @Html.RadioButton("searchBy", "EventName", true) <text>Event Name</text>
+                                @Html.RadioButton("searchBy", "BookingUserName") <text>User Booking Name</text>
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td>
+                                @Html.TextBox("SearchValue", null, new { @class = "form-control", Placeholder = "Search by name/user" })
+                            </td>
+                            <td>
+                                <input type="submit" value="Search" class="btn btn-success" />
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+        </nav>
+    </div>
+</p>
+
+<hr />
+@foreach (var item in Model)
+{
+    <span style="display: inline; gap: 15px;">
+        <span style ="display: inline; gap: 15px;">
+            <img src="@("/image/"+ item.ImageName)" asp-append-version="true" height="250px" />
+        </span>
+    </span>
+}
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.EventName)
+            </th>
+             <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StartDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EndDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Venue)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BookingUserName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Category)
+            </th>
+            <td class="col-sm-2">
+                @Html.DisplayNameFor(model => model.ImageName)
+            </td>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Any())
+        {
+            @foreach (var item in Model) {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.EventName)
+                        </td>
+                         <td>
+                            @Html.DisplayFor(modelItem => item.Description)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.StartDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.EndDate)
+                        </td>
+                            <td>@item.Venue</td>
+                            <td>@item.Status</td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.BookingUserName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Category.Category)
+                        </td>
+                        <td class="col-sm-2">
+                            @Html.DisplayNameFor(model => item.ImageName)
+                        </td>
+                        <td class="col-sm-10">
+                            @Html.DisplayFor(model => item.ImageName)
+                        </td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.EventId">Edit</a> |
+                            <a asp-action="Details" asp-route-id="@item.EventId">Details</a> |
+                            <a asp-action="Delete" asp-route-id="@item.EventId">Delete</a>
+                        </td>
+                    </tr>
+            }
+    }
+        else
+        {
+            <tr>
+                <td colspan="8">No events available.</td>
+            </tr>
+        }
+    </tbody>
+</table> *@

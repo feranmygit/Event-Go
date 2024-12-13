@@ -1,0 +1,55 @@
+﻿@model Event_Go.Models.LoginM.InputModel
+
+
+<div class="login-page">
+    <!-- Left Container (could be a background or promotional content) -->
+    <div class="left-container">
+        <div class="left-content">
+            <h2>Welcome Back!</h2>
+            <p>Manage your events seamlessly with us. Log in to continue managing your upcoming events, collaborating, and much more.</p>
+        </div>
+    </div>
+
+    <!-- Right Container (Login Form) -->
+    <div class="right-container">
+        <div class="login-card">
+            <h2 class="login-title">Login</h2>
+            <form asp-action="Login" method="post" class="login-form">
+                <div asp-validation-summary="ModelOnly" class="text-danger validation-summary"></div>
+
+                <!-- Email -->
+                <div class="form-group">
+                    <label asp-for="Email" class="form-label">Email</label>
+                    <input asp-for="Email" class="form-control" placeholder="Enter your email" />
+                    <span asp-validation-for="Email" class="text-danger validation-message"></span>
+                </div>
+
+                <!-- Password -->
+                <div class="form-group">
+                    <label asp-for="Password" class="form-label">Password</label>
+                    <input asp-for="Password" class="form-control" type="password" placeholder="Enter your password" />
+                    <span asp-validation-for="Password" class="text-danger validation-message"></span>
+                </div>
+
+                <!-- Remember Me -->
+                <div class="form-check">
+                    <input asp-for="RememberMe" class="form-check-input" id="rememberMe" />
+                    <label asp-for="RememberMe" class="form-check-label" for="rememberMe">Remember Me</label>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="form-submit">
+                    <button type="submit" class="btn-primary btn-sub btn-width">Login</button>
+                </div>
+
+                <!-- Register Section -->
+                <div class="register-section">
+                    <p>Don't have an account?</p>
+                    <a asp-action="Register" class="reg-color">Register</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+

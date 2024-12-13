@@ -1,0 +1,119 @@
+﻿@model WebApp.Models.Eventstable
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1 class="edit-title title-blog">Edit Event</h1>
+<hr />
+
+<div class="edit-page">
+    <div class="edit-card">
+        <!-- Image Display -->
+        <div class="image-container">
+            @if (!string.IsNullOrEmpty(Model.ImageName))
+            {
+                <img src="@Url.Content(Model.ImageName)" alt="Current Image" class="current-image" />
+            }
+            else
+            {
+                <p class="no-image">No image uploaded</p>
+            }
+        </div>
+
+        <!-- Form -->
+        <form asp-action="Edit" method="post" enctype="multipart/form-data" class="edit-form">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="EventId" />
+
+            <!-- Validation Summary -->
+            <div asp-validation-summary="ModelOnly" class="validation-summary"></div>
+
+            <!-- Event Name Field -->
+            <div class="form-group">
+                <label asp-for="EventName" class="form-label">Event Name</label>
+                <input asp-for="EventName" class="form-input" />
+                <span asp-validation-for="EventName" class="validation-message"></span>
+            </div>
+
+            <!-- Description Field -->
+            <div class="form-group">
+                <label asp-for="Description" class="form-label">Description</label>
+                <textarea asp-for="Description" class="form-input textarea"></textarea>
+                <span asp-validation-for="Description" class="validation-message"></span>
+            </div>
+
+            <!-- Category Field -->
+            <div class="form-group">
+                <label asp-for="Category" class="form-label">Category</label>
+                <select asp-for="CategoryId" class="form-input dropdown" asp-items="ViewBag.CategoryList"></select>
+                <span asp-validation-for="CategoryId" class="validation-message"></span>
+            </div>
+
+            <!-- Start and End Date Fields -->
+            <div class="form-group">
+                <label asp-for="StartDate" class="form-label">Start Date</label>
+                <input asp-for="StartDate" type="date" class="form-input" />
+                <span asp-validation-for="StartDate" class="validation-message"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EndDate" class="form-label">End Date</label>
+                <input asp-for="EndDate" type="date" class="form-input" />
+                <span asp-validation-for="EndDate" class="validation-message"></span>
+            </div>
+
+            <!-- Venue Field -->
+            <div class="form-group">
+                <label asp-for="Venue" class="form-label">Venue</label>
+                <input asp-for="Venue" class="form-input" />
+                <span asp-validation-for="Venue" class="validation-message"></span>
+            </div>
+
+            <!-- Status Field -->
+            <div class="form-group">
+                <label asp-for="Status" class="form-label">Status</label>
+                <select asp-for="Status" class="form-input dropdown" asp-items="ViewBag.StatusList"></select>
+                <span asp-validation-for="Status" class="validation-message"></span>
+            </div>
+
+            <!-- Booking User Field -->
+            <div class="form-group">
+                <label asp-for="BookingUserName" class="form-label">Booking User</label>
+                <input asp-for="BookingUserName" class="form-input" />
+                <span asp-validation-for="BookingUserName" class="validation-message"></span>
+            </div>
+
+            <!-- File Upload for New Image -->
+            <div class="form-group">
+                <label asp-for="ImageFile" class="form-label">Upload New Image</label>
+                <input asp-for="ImageFile" name="file" type="file" class="form-input file-input" />
+                <span asp-validation-for="ImageFile" class="validation-message"></span>
+            </div>
+
+            <!-- Save Button -->
+            <div class="form-actions">
+                <input type="submit" value="Save" class="btn btn-mode submit-btn" />
+                <a asp-action="Index" class="btn btn-mode back-btn">Back to List</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@* @section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+} *@
+
+
+@section Scripts {
+    <script type="text/javascript">
+        document.getElementById('ImageFile').addEventListener('change', function () {
+            var fileName = this.files[0].name; 
+
+            document.getElementById('ImageName').value = fileName;
+        });
+    </script>
+}
+ 

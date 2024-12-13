@@ -1,0 +1,44 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <div class="homepage-container">
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="overlay"></div>
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    <span id="animated-text">Manage Your Events Seamlessly</span>
+                </h1>
+                <p class="hero-description">The ultimate platform for creating, managing, and organizing events effortlessly. Connect, collaborate, and bring your ideas to life.</p>
+                <div class="hero-buttons">
+                    <a asp-action="Index" asp-controller="Eventstables" class="btn btn-primary">View Events</a>
+                    <a asp-action="Create" asp-controller="Eventstables" class="btn btn-secondary">Create Event</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features-section">
+            <h2>Why Choose Us?</h2>
+            <div class="feature-cards">
+                <div class="feature-card">
+                    <i class="fa fa-calendar-check"></i>
+                    <h3>Easy Event Management</h3>
+                    <p>Create and manage events with ease using our intuitive platform.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fa fa-users"></i>
+                    <h3>Engage Your Audience</h3>
+                    <p>Connect with your attendees seamlessly and keep them updated.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fa fa-cogs"></i>
+                    <h3>Automated Tools</h3>
+                    <p>Leverage powerful tools for ticketing, reminders, and more.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>

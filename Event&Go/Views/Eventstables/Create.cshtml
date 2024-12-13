@@ -1,0 +1,112 @@
+﻿@model WebApp.Models.Eventstable
+
+@{
+    ViewData["Title"] = "Create";
+}
+<h1 class="custom-event-title title-blog">Create Event</h1>
+<hr />
+
+<div class="custom-event-form-container">
+    <form asp-action="Create" method="post" enctype="multipart/form-data" class="custom-event-form">
+        <div asp-validation-summary="ModelOnly" class="custom-validation-summary"></div>
+        <input type="text" asp-for="EventId" hidden="true" />
+
+
+        <!-- Event Name -->
+        <div class="custom-form-group">
+            <label asp-for="EventName" class="custom-label">Event Name</label>
+            <input asp-for="EventName" class="custom-input" placeholder="Enter event name" />
+            <span asp-validation-for="EventName" class="custom-validation-message"></span>
+        </div>
+
+        <!-- Description -->
+        <div class="custom-form-group">
+            <label asp-for="Description" class="custom-label">Description</label>
+            <input asp-for="Description" class="custom-input" placeholder="Enter event description" />
+            <span asp-validation-for="Description" class="custom-validation-message"></span>
+        </div>
+
+        <!-- Category -->
+        <div class="custom-form-group">
+            <label asp-for="Category" class="custom-label">Category</label>
+            <select asp-for="CategoryId" class="custom-select" asp-items="ViewBag.CategoryList"></select>
+        </div>
+
+        <!-- Start Date -->
+        <div class="custom-form-group">
+            <label asp-for="StartDate" class="custom-label">Start Date</label>
+            <input asp-for="StartDate" class="custom-input" type="date" />
+            <span asp-validation-for="StartDate" class="custom-validation-message"></span>
+        </div>
+
+        <!-- End Date -->
+        <div class="custom-form-group">
+            <label asp-for="EndDate" class="custom-label">End Date</label>
+            <input asp-for="EndDate" class="custom-input" type="date" />
+            <span asp-validation-for="EndDate" class="custom-validation-message"></span>
+        </div>
+
+        <!-- Venue -->
+        <div class="custom-form-group">
+            <label asp-for="Venue" class="custom-label">Venue</label>
+            <input asp-for="Venue" class="custom-input" placeholder="Enter venue name" />
+            <span asp-validation-for="Venue" class="custom-validation-message"></span>
+        </div>
+
+        <!-- Status -->
+        <div class="custom-form-group">
+            <label asp-for="Status" class="custom-label">Status</label>
+            <select asp-for="Status" class="custom-select" asp-items="ViewBag.StatusList"></select>
+        </div>
+
+        <!-- Booking Username -->
+        <div class="custom-form-group">
+            <label asp-for="BookingUserName" class="custom-label">Booking Username</label>
+            <input asp-for="BookingUserName" class="custom-input" placeholder="Enter username" />
+            <span asp-validation-for="BookingUserName" class="custom-validation-message"></span>
+        </div>
+
+        <!-- Image File -->
+        <div class="custom-form-group">
+            <label asp-for="ImageFile" for="ImageFile" class="custom-label">Event Image</label>
+            <input type="file" id="ImageFile" name="file" class="custom-input" />
+            <span asp-validation-for="ImageFile" class="custom-validation-message"></span>
+        </div>
+
+         <!-- Event Image Name -->
+        <div class="custom-form-group">
+            <label asp-for="ImageName" class="custom-label">Image Name</label>
+            <input asp-for="ImageName" class="custom-input" placeholder="Enter image name" disabled/>
+            <span asp-validation-for="ImageName" class="custom-validation-message"></span>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="custom-form-group">
+            <input type="submit" value="Create Event" class="custom-submit-btn" />
+        </div>
+    </form>
+
+    <!-- Back to List Button -->
+    <div class="custom-back-link">
+        <a asp-action="Index" class="custom-back-btn">Back to List</a>
+    </div>
+</div>
+
+
+@* @section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+} *@
+
+@section Scripts {
+    <script type="text/javascript">
+        // This function will be triggered when the file is selected
+        document.getElementById('ImageFile').addEventListener('change', function () {
+            // Get the file name without the extension
+            var fileName = this.files[0].name; // Get the selected file name
+
+            // Set the ImageName input's value to the file name
+            document.getElementById('ImageName').value = fileName;
+        });
+    </script>
+}
+

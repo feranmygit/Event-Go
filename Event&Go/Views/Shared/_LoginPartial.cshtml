@@ -1,0 +1,77 @@
+﻿@using Microsoft.AspNetCore.Identity
+
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+<ul class="navbar-navs">
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <li class="nav-items">
+            <a id="manage" class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
+        </li>
+        <li class="nav-items">
+            <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                <button id="logout" type="submit" class="nav-link btn btn-link text-dark border-0">Logout</button>
+            </form>
+        </li>
+    }
+    else
+    {
+        <li class="nav-items">
+            <a class="nav-link text-dark" id="register" asp-area="Identity" asp-page="/Account/Register">Register</a>
+        </li>
+        <li class="nav-items">
+            <a class="nav-link text-dark" id="login" asp-area="Identity" asp-page="/Account/Login">Login</a>
+        </li>
+    }
+</ul>
+@* 
+<ul class="navbar-navs">
+    @if (SignInManager.IsSignedIn(User))
+    {
+        // Fetch and mask the email
+        var email = UserManager.GetUserName(User)!;
+        string maskedEmail = "";
+        if (!string.IsNullOrEmpty(email))
+        {
+            var atIndex = email.IndexOf('@');
+            if (atIndex != -1 && atIndex >= 5)
+            {
+                var localPart = email.Substring(0, atIndex);
+                var domainPart = email.Substring(atIndex);
+
+                // Mask the middle of the local part
+                var visibleStart = localPart.Substring(0, 2);
+                var visibleEnd = localPart.Length > 2 ? localPart.Substring(localPart.Length - 2) : "";
+
+                maskedEmail = $"{visibleStart}***{visibleEnd}{domainPart}";
+            }  
+            else
+            {
+                maskedEmail = email; // Fallback for invalid or short email
+            }
+        }
+
+        <li class="nav-items">
+            <a id="manage" class="nav-link" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">
+                Hello @maskedEmail!
+            </a>
+        </li>
+        <li class="nav-items">
+            <form id="logoutForm" class="d-inline" asp-area="" asp-controller="Account" asp-action="Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { Views_Account_Login = "" })">
+                <button id="logout" type="submit" class="btn btn-sm btn-link">Logout</button>
+            </form>
+        </li>
+    }
+    else
+    {
+        <li class="nav-item">
+            <a class="nav-link" id="register" asp-area="" asp-controller="Account" asp-action="Register">Register</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="login" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
+        </li>
+    }
+</ul> *@
+
+
