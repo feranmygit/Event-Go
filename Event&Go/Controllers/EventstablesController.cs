@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Event_Go.Data;
 using WebApp.Models;
 using Microsoft.AspNetCore.Authorization;
+using System.Net.Mail;
 
 namespace Event_Go.Controllers
 {
@@ -78,12 +79,51 @@ namespace Event_Go.Controllers
             return View();
         }
 
+
+
         [Authorize(Roles = "Admin,Organizer")]
         // POST: Events/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Eventstable eventstable, IFormFile file)
         {
+            var myAppConfig = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
+
+            var Username = myAppConfig.GetValue<string>("EmailConfig:Username");
+            var Password = myAppConfig.GetValue<string>("EmailConfig:Password");
+            var Host = myAppConfig.GetValue<string>("EmailConfig:Host");
+            var Port = myAppConfig.GetValue<int>("EmailConfig:Port");
+            var FromEmail = myAppConfig.GetValue<string>("EmailConfig:FromEmail");
+
+            MailMessage message = new MailMessage();
+
+            message.From = new MailAddress(FromEmail);
+            message.To.Add(eventstable.ToEmailAddress.ToString());
+            message.Subject = eventstable.EventName;
+            message.IsBodyHtml = true;
+            message.Body = eventstable.Description;
+            message.Attachments.Add(new Attachment(file.OpenReadStream(), file.FileName));
+
+            SmtpClient mailClient = new SmtpClient(Host);
+
+            try
+            {
+                mailClient.UseDefaultCredentials = false;
+                mailClient.Credentials = new System.Net.NetworkCredential(Username, Password);
+                mailClient.Host = Host;
+                mailClient.Port = Port;
+                mailClient.EnableSsl = true;
+                await mailClient.SendMailAsync(message);
+                ViewBag.message = "Email sent successfully.";
+            }
+            catch (Exception ex)
+            {
+                //ViewBag.message = "Email failed to send.";
+                ViewBag.message = $"Email failed to send. Error: {ex.Message}";
+            }
+            finally
+            { mailClient.Dispose(); }
+
             // Repopulate dropdowns if ModelState is invalid
             ViewBag.CategoryList = new SelectList(_context.Event_categories, "Id", "Category", eventstable.CategoryId);
             ViewBag.StatusList = new SelectList(new List<string>
@@ -104,10 +144,15 @@ namespace Event_Go.Controllers
             _context.Eventstables.Add(eventstable);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-            
+
 
 
         }
+
+
+
+
+
         [Authorize(Roles = "Admin,Organizer")]
 
         // GET: Events/Edit/5

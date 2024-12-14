@@ -7,6 +7,7 @@
 <hr />
 
 <div class="custom-event-form-container">
+    <div><h1>@ViewBag.message</h1></div>
     <form asp-action="Create" method="post" enctype="multipart/form-data" class="custom-event-form">
         <div asp-validation-summary="ModelOnly" class="custom-validation-summary"></div>
         <input type="text" asp-for="EventId" hidden="true" />
@@ -22,7 +23,7 @@
         <!-- Description -->
         <div class="custom-form-group">
             <label asp-for="Description" class="custom-label">Description</label>
-            <input asp-for="Description" class="custom-input" placeholder="Enter event description" />
+            <textarea asp-for="Description" class="custom-input" cols="20" rows="5" placeholder="Enter event description" ></textarea>
             <span asp-validation-for="Description" class="custom-validation-message"></span>
         </div>
 
@@ -48,9 +49,16 @@
 
         <!-- Venue -->
         <div class="custom-form-group">
-            <label asp-for="Venue" class="custom-label">Venue</label>
-            <input asp-for="Venue" class="custom-input" placeholder="Enter venue name" />
+            <label asp-for="Venue" class="custom-label">Venue Address</label>
+            <input asp-for="Venue" class="custom-input" placeholder="Enter address" />
             <span asp-validation-for="Venue" class="custom-validation-message"></span>
+        </div>
+
+        <!-- Location address -->
+        <div class="custom-form-group">
+            <label asp-for="Location" class="custom-label"></label>
+            <input asp-for="Location" class="custom-input" placeholder="e.g ilesa" />
+            <span asp-validation-for="Location" class="custom-validation-message"></span>
         </div>
 
         <!-- Status -->
@@ -66,6 +74,17 @@
             <span asp-validation-for="BookingUserName" class="custom-validation-message"></span>
         </div>
 
+          <!-- Booking User Email -->
+        <div class="custom-form-group">
+            <label asp-for="FromEmailAddress" class="custom-label">From Email</label>
+            <input asp-for="FromEmailAddress" type="email" class="custom-input" placeholder="Contact@gmail.com" />
+            <span asp-validation-for="FromEmailAddress" class="custom-validation-message"></span>
+        </div>    
+        <div class="custom-form-group">
+            <label asp-for="ToEmailAddress" class="custom-label">To Email</label>
+            <input asp-for="ToEmailAddress" type="email" class="custom-input" placeholder="Contact@gmail.com" />
+            <span asp-validation-for="ToEmailAddress" class="custom-validation-message"></span>
+        </div>
         <!-- Image File -->
         <div class="custom-form-group">
             <label asp-for="ImageFile" for="ImageFile" class="custom-label">Event Image</label>
@@ -76,7 +95,7 @@
          <!-- Event Image Name -->
         <div class="custom-form-group">
             <label asp-for="ImageName" class="custom-label">Image Name</label>
-            <input asp-for="ImageName" class="custom-input" placeholder="Enter image name" disabled/>
+            <input asp-for="ImageName" class="custom-input" disabled/>
             <span asp-validation-for="ImageName" class="custom-validation-message"></span>
         </div>
 
