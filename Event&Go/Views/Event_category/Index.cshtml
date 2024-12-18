@@ -10,8 +10,10 @@
 
 <div class="actions-container">
     <!-- Create Button -->
-    <a asp-action="Create" class="btn-create-category">Add New Category</a>
-
+       @if (User.IsInRole("Admin"))
+    {
+        <a asp-action="Create" class="btn-create-category">Add New Category</a>
+    }
     <!-- Search Container -->
     <div class="search-container-category">
         <form role="search" method="get" asp-action="Index" asp-controller="Event_category">
@@ -49,31 +51,31 @@
                     <p><strong>Price Per Hour:</strong> $@item.PricePerHour</p>
                     <p><strong>Price Per Day:</strong> $@item.PricePerDay</p>
                     <p><strong>Max Capacity:</strong> @item.MaxCapacity</p>
-                    <p>
-                        <strong>Is Available:</strong>
-                        @Html.DropDownListFor(modelItem => item.IsActive,
-                                 new SelectList(new[]
-                                 {
-                new { Value = "true", Text = "True" },
-                new { Value = "false", Text = "False" }
-                }, "Value", "Text", item.IsActive.ToString().ToLower()),
-                                 new { @class = "form-control status-dropdown", onchange = "this.form.submit()" })
-                    </p>
+                    <div class="details-row">
+                        <label>Status:</label>
+                        <span>@(item.IsActive ? "Active" : "Inactive")</span>
+                    </div>
                 </div>
                 <div class="card-footer">
                     <div class="action-icons d-flex justify-content-around">
-                        <a asp-action="Edit" asp-route-id="@item.Id" class="action-icon" title="Edit">
-                            <span class="material-symbols-outlined">edit_square</span>
-                            <span class="preview">Edit</span>
-                        </a>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="action-icon" title="Edit">
+                                <span class="material-symbols-outlined">edit_square</span>
+                                <span class="preview">Edit</span>
+                            </a>
+                        }
                         <a asp-action="Details" asp-route-id="@item.Id" class="action-icon" title="Details">
                             <span class="material-symbols-outlined">info</span>
                             <span class="preview">Details</span>
                         </a>
-                        <a asp-action="Delete" asp-route-id="@item.Id" class="action-icon" title="Delete">
-                            <span class="material-symbols-outlined">delete</span>
-                            <span class="preview">Delete</span>
-                        </a>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="action-icon" title="Delete">
+                                <span class="material-symbols-outlined">delete</span>
+                                <span class="preview">Delete</span>
+                            </a>
+                        }
                     </div>
                 </div>
             </div>

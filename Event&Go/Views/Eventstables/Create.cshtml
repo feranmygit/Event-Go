@@ -15,41 +15,41 @@
 
         <!-- Event Name -->
         <div class="custom-form-group">
-            <label asp-for="EventName" class="custom-label">Event Name</label>
+            <label asp-for="EventName" class="custom-label"></label>
             <input asp-for="EventName" class="custom-input" placeholder="Enter event name" />
             <span asp-validation-for="EventName" class="custom-validation-message"></span>
         </div>
 
         <!-- Description -->
         <div class="custom-form-group">
-            <label asp-for="Description" class="custom-label">Description</label>
+            <label asp-for="Description" class="custom-label"></label>
             <textarea asp-for="Description" class="custom-input" cols="20" rows="5" placeholder="Enter event description" ></textarea>
             <span asp-validation-for="Description" class="custom-validation-message"></span>
         </div>
 
         <!-- Category -->
         <div class="custom-form-group">
-            <label asp-for="Category" class="custom-label">Category</label>
+            <label asp-for="Category" class="custom-label"></label>
             <select asp-for="CategoryId" class="custom-select" asp-items="ViewBag.CategoryList"></select>
         </div>
 
         <!-- Start Date -->
         <div class="custom-form-group">
-            <label asp-for="StartDate" class="custom-label">Start Date</label>
+            <label asp-for="StartDate" class="custom-label"></label>
             <input asp-for="StartDate" class="custom-input" type="date" />
             <span asp-validation-for="StartDate" class="custom-validation-message"></span>
         </div>
 
         <!-- End Date -->
         <div class="custom-form-group">
-            <label asp-for="EndDate" class="custom-label">End Date</label>
+            <label asp-for="EndDate" class="custom-label"></label>
             <input asp-for="EndDate" class="custom-input" type="date" />
             <span asp-validation-for="EndDate" class="custom-validation-message"></span>
         </div>
 
         <!-- Venue -->
         <div class="custom-form-group">
-            <label asp-for="Venue" class="custom-label">Venue Address</label>
+            <label asp-for="Venue" class="custom-label"></label>
             <input asp-for="Venue" class="custom-input" placeholder="Enter address" />
             <span asp-validation-for="Venue" class="custom-validation-message"></span>
         </div>
@@ -63,38 +63,47 @@
 
         <!-- Status -->
         <div class="custom-form-group">
-            <label asp-for="Status" class="custom-label">Status</label>
+            <label asp-for="Status" class="custom-label"></label>
             <select asp-for="Status" class="custom-select" asp-items="ViewBag.StatusList"></select>
         </div>
 
         <!-- Booking Username -->
         <div class="custom-form-group">
-            <label asp-for="BookingUserName" class="custom-label">Booking Username</label>
+            <label asp-for="BookingUserName" class="custom-label"></label>
             <input asp-for="BookingUserName" class="custom-input" placeholder="Enter username" />
             <span asp-validation-for="BookingUserName" class="custom-validation-message"></span>
         </div>
 
           <!-- Booking User Email -->
+  
         <div class="custom-form-group">
-            <label asp-for="FromEmailAddress" class="custom-label">From Email</label>
-            <input asp-for="FromEmailAddress" type="email" class="custom-input" placeholder="Contact@gmail.com" />
-            <span asp-validation-for="FromEmailAddress" class="custom-validation-message"></span>
-        </div>    
-        <div class="custom-form-group">
-            <label asp-for="ToEmailAddress" class="custom-label">To Email</label>
-            <input asp-for="ToEmailAddress" type="email" class="custom-input" placeholder="Contact@gmail.com" />
+            <label asp-for="ToEmailAddress" class="custom-label"></label>
+            <input asp-for="ToEmailAddress" id="ToEmailAddress" type="email" class="custom-input" placeholder="Contact@gmail.com" />
             <span asp-validation-for="ToEmailAddress" class="custom-validation-message"></span>
+        </div>   
+        <div class="custom-form-group">
+            <label asp-for="CreatedBy" class="custom-label"></label>
+            <input asp-for="CreatedBy" class="custom-input" type="email" placeholder="Enter email" />
+            <span asp-validation-for="CreatedBy" class="custom-validation-message"></span>
+            <div class="privacy-Notice">
+                <span class="material-symbols-outlined">
+                    info
+                </span>
+                <span>
+                    Ensure your email matched the registered email address
+                </span>
+            </div>
         </div>
         <!-- Image File -->
         <div class="custom-form-group">
-            <label asp-for="ImageFile" for="ImageFile" class="custom-label">Event Image</label>
+            <label asp-for="ImageFile" for="ImageFile" class="custom-label"></label>
             <input type="file" id="ImageFile" name="file" class="custom-input" />
             <span asp-validation-for="ImageFile" class="custom-validation-message"></span>
         </div>
 
          <!-- Event Image Name -->
         <div class="custom-form-group">
-            <label asp-for="ImageName" class="custom-label">Image Name</label>
+            <label asp-for="ImageName" class="custom-label"></label>
             <input asp-for="ImageName" class="custom-input" disabled/>
             <span asp-validation-for="ImageName" class="custom-validation-message"></span>
         </div>
@@ -117,6 +126,9 @@
 } *@
 
 @section Scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
     <script type="text/javascript">
         // This function will be triggered when the file is selected
         document.getElementById('ImageFile').addEventListener('change', function () {
@@ -125,7 +137,15 @@
 
             // Set the ImageName input's value to the file name
             document.getElementById('ImageName').value = fileName;
-        });
+        }); 
+        
+        // document.getElementById('ToEmailAddress').addEventListener('change', function () {
+        //     var ToEmailAddress = this.value; 
+
+        //     document.getElementById('FromEmailAddress').value = ToEmailAddress;
+        // });
+
+      
     </script>
 }
 

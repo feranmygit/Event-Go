@@ -20,6 +20,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Event_Go.Areas.Identity.Pages.Account
@@ -119,21 +120,43 @@ namespace Event_Go.Areas.Identity.Pages.Account
         }
 
 
+        //public async Task OnGetAsync(string returnUrl = null)
+        //{
+        //    ReturnUrl = returnUrl;
+        //    ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+
+        //    Input = new InputModel()
+        //    {
+        //        RoleLists = _roleManager.Roles.Select(x => x.Name).Select(i => new SelectListItem
+        //        {
+        //            Text = i,
+        //            Value = i
+        //        }
+        //        )
+        //    };
+        //}
+
         public async Task OnGetAsync(string returnUrl = null)
         {
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
+            var allRoles = await _roleManager.Roles.ToListAsync();
+            // Exclude the Admin role from the role selection
             Input = new InputModel()
             {
-                RoleLists = _roleManager.Roles.Select(x => x.Name).Select(i => new SelectListItem
-                {
-                    Text = i,
-                    Value = i
-                }
-                )
+                RoleLists = allRoles
+                    .Where(r => r.Name != "Admin")
+                    .Select(r => new SelectListItem
+                    {
+                        Text = r.Name,
+                        Value = r.Name
+                    })
+                    .ToList()
             };
         }
+
+
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {

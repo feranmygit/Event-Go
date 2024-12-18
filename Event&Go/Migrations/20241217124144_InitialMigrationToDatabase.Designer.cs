@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Event_Go.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241214163656_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20241217124144_InitialMigrationToDatabase")]
+    partial class InitialMigrationToDatabase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -275,6 +275,14 @@ namespace Event_Go.Migrations
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("CreatedByUserId")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(255)
@@ -288,13 +296,9 @@ namespace Event_Go.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
 
-                    b.Property<string>("FromEmailAddress")
-                        .HasMaxLength(200)
-                        .HasColumnType("varchar(200)");
-
                     b.Property<string>("ImageName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Location")
                         .IsRequired()
@@ -309,8 +313,8 @@ namespace Event_Go.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("ToEmailAddress")
-                        .HasMaxLength(200)
-                        .HasColumnType("varchar(200)");
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Venue")
                         .IsRequired()

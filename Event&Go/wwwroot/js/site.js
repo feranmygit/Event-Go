@@ -60,16 +60,6 @@ document.querySelector(".image-slider-container").addEventListener("mouseout", s
 
 
 
-document.addEventListener('DOMContentLoaded', () => {
-    const hamburgerMenu = document.querySelector('.hamburger-menu');
-    const navbarLinks = document.querySelector('.navbar-redirect-links');
-
-    hamburgerMenu.addEventListener('click', () => {
-        navbarLinks.classList.toggle('active');
-    });
-});
-
-
 
 
 

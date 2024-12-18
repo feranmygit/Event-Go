@@ -9,6 +9,7 @@ using Event_Go.Data;
 using WebApp.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Net.Mail;
+using System.Security.Claims;
 
 namespace Event_Go.Controllers
 {
@@ -24,39 +25,65 @@ namespace Event_Go.Controllers
             _hostEnvironment = hostEnvironment;
         }
 
+
         [Authorize(Roles = "Admin,Organizer,User")]
-        // GET: Eventstables
-        public async Task<IActionResult> Index(string searchBy, string SearchValue)
+        public async Task<IActionResult> Index(string searchBy, string SearchValue, int page = 1, int pageSize = 4)
         {
-            // Add event statistics for the dashboard
+            DateTime today = DateTime.Today;
+
+            // Update statuses
+            var eventsToUpdate = _context.Eventstables.Where(e => e.Status != "Cancelled").ToList();
+            foreach (var ev in eventsToUpdate)
+            {
+                if (ev.StartDate < today)
+                    ev.Status = "Cancelled";
+                else if (ev.StartDate == today)
+                    ev.Status = "Ongoing";
+                else if (ev.StartDate > today && ev.StartDate <= today.AddDays(3))
+                    ev.Status = "Upcoming";
+                else if (ev.StartDate > today.AddDays(3))
+                    ev.Status = "Completed";
+            }
+
+            await _context.SaveChangesAsync();
+
+            // Fetch events and statistics
             ViewBag.UpcomingCount = _context.Eventstables.Count(e => e.Status == "Upcoming");
             ViewBag.OngoingCount = _context.Eventstables.Count(e => e.Status == "Ongoing");
-            ViewBag.PlannedCount = _context.Eventstables.Count(e => e.Status == "Planned");
+            ViewBag.PlannedCount = _context.Eventstables.Count(e => e.Status == "Completed");
             ViewBag.CancelledCount = _context.Eventstables.Count(e => e.Status == "Cancelled");
 
+            // Updated query to exclude Planned events
+            var eventsQuery = _context.Eventstables
+                .Include(e => e.Category)
+                .Where(e => (e.StartDate >= today || e.Status != "Cancelled") && e.Status != "Completed");
 
-            var appDbContext = _context.Eventstables.Include(e => e.Category);
-
-            if (string.IsNullOrEmpty(SearchValue))
+            if (!string.IsNullOrEmpty(SearchValue))
             {
-                TempData["InfoMessage"] = "Please provide the search value...";
-                return View( await appDbContext.ToListAsync());
+                if (searchBy?.ToLower() == "eventname")
+                {
+                    eventsQuery = eventsQuery.Where(p => p.EventName.ToLower().Contains(SearchValue.ToLower()));
+                }
+                else if (searchBy?.ToLower() == "bookingusername")
+                {
+                    eventsQuery = eventsQuery.Where(p => p.BookingUserName != null && p.BookingUserName.ToLower().Contains(SearchValue.ToLower()));
+                }
             }
 
-            if (searchBy.ToLower() == "eventname")
-            {
-                // Corrected: Use SearchValue in the search condition
-                var searchByEventName = appDbContext.Where(p => p.EventName.ToLower().Contains(SearchValue.ToLower()));
-                return View(await searchByEventName.ToListAsync());
-            }
-            else if (searchBy.ToLower() == "bookingusername")
-            {
-                // Corrected: Use SearchValue and ensure null check
-                var searchByBookingUserName = appDbContext.Where(p => p.BookingUserName != null && p.BookingUserName.ToLower().Contains(SearchValue.ToLower()));
-                return View(await searchByBookingUserName.ToListAsync());
-            }
-            return View(await appDbContext.ToListAsync());
+            int totalEvents = await eventsQuery.CountAsync();
+            int totalPages = (int)Math.Ceiling((double)totalEvents / pageSize);
+
+            var events = await eventsQuery
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = totalPages;
+
+            return View(events);
         }
+
 
 
 
@@ -72,7 +99,7 @@ namespace Event_Go.Controllers
             {
                 "Upcoming",
                 "Ongoing",
-                "Planned",
+                "Completed",
                 "Cancelled"
             });
 
@@ -87,70 +114,126 @@ namespace Event_Go.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Eventstable eventstable, IFormFile file)
         {
+            if (!ModelState.IsValid)
+            {
+                // Set the creator's user ID
+                eventstable.CreatedByUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+
+                // Repopulate dropdowns if ModelState is invalid
+                ViewBag.CategoryList = new SelectList(_context.Event_categories, "Id", "Category", eventstable.CategoryId);
+                ViewBag.StatusList = new SelectList(new List<string> { "Upcoming", "Ongoing", "Completed", "Cancelled" }, eventstable.Status);
+
+                // Set TempData success message
+                TempData["success"] = "Form submitted successfully!";
+            }
+
+
+            DateTime today = DateTime.Today;
+
+            // Automatically set the status if not provided
+            if (eventstable.Status == null)
+            {
+                if (eventstable.StartDate < today)
+                    eventstable.Status = "Cancelled";
+                else if (eventstable.StartDate == today)
+                    eventstable.Status = "Ongoing";
+                else if (eventstable.StartDate > today && eventstable.StartDate <= today.AddDays(3))
+                    eventstable.Status = "Upcoming";
+                else
+                    eventstable.Status = "Completed";
+            }
+
+
+            // File Validation
+            if (file == null || file.Length == 0)
+            {
+                ModelState.AddModelError("ImageFile", "Event image is required.");
+                ViewBag.CategoryList = new SelectList(_context.Event_categories, "Id", "Category", eventstable.CategoryId);
+                ViewBag.StatusList = new SelectList(new List<string> { "Upcoming", "Ongoing", "Planned", "Cancelled" }, eventstable.Status);
+                return View(eventstable);
+            }
+
             var myAppConfig = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
 
+            // Email Configuration
             var Username = myAppConfig.GetValue<string>("EmailConfig:Username");
             var Password = myAppConfig.GetValue<string>("EmailConfig:Password");
             var Host = myAppConfig.GetValue<string>("EmailConfig:Host");
             var Port = myAppConfig.GetValue<int>("EmailConfig:Port");
             var FromEmail = myAppConfig.GetValue<string>("EmailConfig:FromEmail");
 
-            MailMessage message = new MailMessage();
-
-            message.From = new MailAddress(FromEmail);
-            message.To.Add(eventstable.ToEmailAddress.ToString());
-            message.Subject = eventstable.EventName;
-            message.IsBodyHtml = true;
-            message.Body = eventstable.Description;
-            message.Attachments.Add(new Attachment(file.OpenReadStream(), file.FileName));
-
-            SmtpClient mailClient = new SmtpClient(Host);
-
             try
             {
-                mailClient.UseDefaultCredentials = false;
-                mailClient.Credentials = new System.Net.NetworkCredential(Username, Password);
-                mailClient.Host = Host;
-                mailClient.Port = Port;
-                mailClient.EnableSsl = true;
+                // Prepare Email
+                MailMessage message = new MailMessage
+                {
+                    From = new MailAddress(FromEmail),
+                    Subject = eventstable.EventName,
+                    Body = eventstable.Description,
+                    IsBodyHtml = true
+                };
+                message.To.Add(eventstable.ToEmailAddress);
+                message.Attachments.Add(new Attachment(file.OpenReadStream(), file.FileName));
+
+                using SmtpClient mailClient = new SmtpClient(Host)
+                {
+                    UseDefaultCredentials = false,
+                    Credentials = new System.Net.NetworkCredential(Username, Password),
+                    Host = Host,
+                    Port = Port,
+                    EnableSsl = true
+                };
+
                 await mailClient.SendMailAsync(message);
                 ViewBag.message = "Email sent successfully.";
             }
+            catch (SmtpException smtpEx)
+            {
+                ViewBag.message = "Email failed to send!!!";
+            }
             catch (Exception ex)
             {
-                //ViewBag.message = "Email failed to send.";
-                ViewBag.message = $"Email failed to send. Error: {ex.Message}";
+                ViewBag.message = "Unexpected error!!!";
             }
-            finally
-            { mailClient.Dispose(); }
 
-            // Repopulate dropdowns if ModelState is invalid
-            ViewBag.CategoryList = new SelectList(_context.Event_categories, "Id", "Category", eventstable.CategoryId);
-            ViewBag.StatusList = new SelectList(new List<string>
+            // Save Image
+            string path = Path.Combine(_hostEnvironment.WebRootPath, "image");
+            string fileName = $"{Guid.NewGuid()}_{file.FileName}";
+            string fullPath = Path.Combine(path, fileName);
+
+            try
             {
-                "Upcoming", "Ongoing", "Planned", "Cancelled"
-            }, eventstable.Status);
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
 
+                using FileStream fs = new FileStream(fullPath, FileMode.Create);
+                await file.CopyToAsync(fs);
 
-            string path = _hostEnvironment.WebRootPath + "/image/";
-            Guid id = Guid.NewGuid();
-            string fileName = id.ToString() + "_" + file.FileName;
+                eventstable.ImageName = "/image/" + fileName; 
+            }
+            catch (Exception ex)
+            {
+                ViewBag.message = "File upload failed!!";
+                return View(eventstable);
+            }
 
-            string newPath = Path.Combine(path, fileName);
-            using FileStream fs = new FileStream(newPath, FileMode.Create);
-            await file.CopyToAsync(fs);
+            // Save to Database
+            try
+            {
+                _context.Eventstables.Add(eventstable);
+                await _context.SaveChangesAsync();
+                TempData["success"] = "An event was created successfully";
+            }
+            catch (Exception ex)
+            {
+                ViewBag.message = "Database operation failed";
+            }
 
-            eventstable.ImageName = "/image/" + fileName; // Store only the relative path in the database
-            _context.Eventstables.Add(eventstable);
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-
-
-
         }
-
-
-
 
 
         [Authorize(Roles = "Admin,Organizer")]
@@ -158,8 +241,10 @@ namespace Event_Go.Controllers
         // GET: Events/Edit/5
         public IActionResult Edit(int? id)
         {
+
             if (id == null)
                 return NotFound();
+
 
             var eventstable = _context.Eventstables.Find(id);
             if (eventstable == null)
@@ -185,6 +270,7 @@ namespace Event_Go.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Eventstable eventstable, IFormFile file)
         {
+
             // Repopulate dropdowns if ModelState is invalid
             ViewBag.CategoryList = new SelectList(_context.Event_categories, "Id", "Category", eventstable.CategoryId);
             ViewBag.StatusList = new SelectList(new List<string>
@@ -197,11 +283,29 @@ namespace Event_Go.Controllers
                 return NotFound();
             }
 
+
+
+
             var existingEvent = await _context.Eventstables.FindAsync(id);
 
             if (existingEvent == null)
             {
                 return NotFound();
+            }
+
+            DateTime today = DateTime.Today;
+
+            // Automatically set the status if not provided
+            if (eventstable.Status == null)
+            {
+                if (eventstable.StartDate < today)
+                    eventstable.Status = "Cancelled";
+                else if (eventstable.StartDate == today)
+                    eventstable.Status = "Ongoing";
+                else if (eventstable.StartDate > today && eventstable.StartDate <= today.AddDays(3))
+                    eventstable.Status = "Upcoming";
+                else
+                    eventstable.Status = "Planned";
             }
 
             // If a new file is uploaded, delete the old image and upload the new one
@@ -244,9 +348,11 @@ namespace Event_Go.Controllers
 
             _context.Update(existingEvent);
             await _context.SaveChangesAsync();
+            TempData["success"] = "The event was updated successfully";
 
             return RedirectToAction(nameof(Index));
         }
+
 
         [Authorize(Roles = "Admin,Organizer,User")]
         // GET: Events/Details/5
@@ -280,6 +386,7 @@ namespace Event_Go.Controllers
             if (eventstable == null)
                 return NotFound();
 
+
             return View(eventstable);
         }
 
@@ -294,6 +401,7 @@ namespace Event_Go.Controllers
         {
             var eventstable = _context.Eventstables.Find(id);
 
+
             // delete the record
             if (!string.IsNullOrEmpty(eventstable.ImageName))
             {
@@ -306,8 +414,27 @@ namespace Event_Go.Controllers
 
             _context.Eventstables.Remove(eventstable);
             _context.SaveChanges();
+            TempData["success"] = "The event was deleted successfully";
             return RedirectToAction(nameof(Index));
         }
+
+
+        [Authorize(Roles = "Admin,Organizer,User")]
+        public async Task<IActionResult> MyEvents()
+        {
+            // Get the currently logged-in user's ID
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            // Fetch events created by this user
+            var userEvents = await _context.Eventstables
+                .Include(e => e.Category) // Include related category data
+                .Where(e => e.CreatedByUserId == userId) // Assuming 'CreatedByUserId' stores the creator's user ID
+                .ToListAsync();
+
+            return View(userEvents);
+        }
+
+
 
     }
 }

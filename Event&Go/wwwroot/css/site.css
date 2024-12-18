@@ -261,6 +261,101 @@ body {
     }
 }
 
+/* Dropdown Navigation Styling */
+/*.navbar {
+    background: #333;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}*/
+
+.nav-menu {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  /*  display: flex;
+    align-items: center;*/
+}
+
+.nav-item {
+    position: relative;
+/*    margin: 0 10px;
+*/}
+
+    .nav-item a {
+        color: #fff;
+        text-decoration: none;
+        padding: 3px 16px;
+        display: flex;
+        align-items:center;
+        transition: color 0.3s ease;
+    }
+
+      /*  .nav-item a:hover {
+            color: #ff9800;
+        }*/
+
+/* Dropdown Menu Styling */
+.dropdown-menu {
+    position: absolute;
+    top: 40px;
+    left: 0;
+    background: linear-gradient(90deg, #1d3557, #457b9d); /* Gradient background for visual appeal */
+    border-radius: 5px;
+    display: none;
+    flex-direction: column;
+    list-style: none;
+    padding: 10px 0;
+    min-width: 150px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    animation: dropdown-slide 0.3s ease-in-out;
+}
+
+    .dropdown-menu li {
+        margin: 0;
+    }
+
+    .dropdown-menu a {
+        color: #fff;
+        padding: 10px 15px;
+        display: block;
+        text-decoration: none;
+        transition: background 0.3s ease;
+    }
+
+        .dropdown-menu a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+        }
+
+/* Animation */
+@keyframes dropdown-slide {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+    }
+
+    .nav-menu {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+
 
 
 
@@ -1673,7 +1768,7 @@ input[type="email"], select {
 
 /* Form Group */
 .custom-form-group {
-    margin-bottom: 20px;
+    margin-bottom: 25px;
 }
 
 .custom-label {
@@ -1823,6 +1918,7 @@ input[type="email"], select {
     height: auto;
     display: block;
     transition: transform 0.3s ease;
+    cursor:pointer;
 }
 
 .image-container:hover .event-image {
@@ -2182,6 +2278,244 @@ input[type="email"], select {
 }
 
 
+
+
+
+
+
+/* General styles for the container */
+.myEvent-container {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 90px auto;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.myEvent-title {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #1d3557;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+/* Table wrapper for horizontal scrolling */
+.myEvent-table-view {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.myEvent-container table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+.myEvent-table-view thead {
+    background: linear-gradient(90deg, #1d3557, #457b9d); /* Gradient background for visual appeal */
+    color: white;
+    text-align: left;
+}
+
+.myEvent-table-view th, .myEvent-table-view td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+.myEvent-table-view tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.myEvent-table-view tr:hover {
+    background-color: #ddd;
+    transition: background-color 0.3s ease;
+}
+
+/* Image styles */
+.myEvent-img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: transform 0.3s ease;
+}
+
+    .myEvent-img:hover {
+        transform: scale(1.1);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+/* Modal styles */
+.modal {
+    display: none; /* Default to hidden */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.modal-content {
+    max-width: 80%;
+    max-height: 80%;
+    border-radius: 10px;
+    animation: zoomIn 0.3s ease-in-out;
+}
+
+@keyframes zoomIn {
+    from {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+#caption {
+    margin: 15px auto;
+    text-align: center;
+    color: #ccc;
+    font-size: 18px;
+}
+
+.close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    color: #fff;
+    font-size: 35px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+    .close:hover,
+    .close:focus {
+        color: #f00;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+/* Buttons */
+.myEvent-info-btn,
+.myEvent-edit-btn,
+.myEvent-btn-danger {
+    text-decoration: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    color: white;
+    font-weight: bold;
+    margin-right: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.myEvent-info-btn {
+    background-color: #17a2b8;
+}
+
+    .myEvent-info-btn:hover {
+        background-color: #138496;
+    }
+
+.myEvent-edit-btn {
+    background-color: #ffc107;
+    color: black;
+}
+
+    .myEvent-edit-btn:hover {
+        background-color: #e0a800;
+    }
+
+.myEvent-btn-danger {
+    background-color: #dc3545;
+}
+
+    .myEvent-btn-danger:hover {
+        background-color: #c82333;
+    }
+
+/* Responsive design */
+@media screen and (max-width: 768px) {
+    .myEvent-table-view {
+        font-size: 14px;
+    }
+
+    .myEvent-img {
+        width: 50px;
+        height: 50px;
+    }
+
+    .myEvent-info-btn,
+    .myEvent-edit-btn,
+    .myEvent-btn-danger {
+        padding: 6px 8px;
+        font-size: 12px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    #caption {
+        font-size: 14px;
+    }
+}
+
+
+
+/*Pagination Stylings*/
+.pagination-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.pagination-btn {
+    padding: 10px 20px;
+    margin: 0 5px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+    .pagination-btn:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+    }
+
+.page-info {
+    margin: 0 10px;
+    font-size: 1.1em;
+}
+
+
+
+
+
+
+
+.privacy-Notice{
+    display:flex;
+    align-items:center;
+    gap:5px;
+    color:grey;
+    font-size:12px;
+    margin-top:5px;
+}
 .danger-delete {
     margin-bottom: 20px;
     color: red;

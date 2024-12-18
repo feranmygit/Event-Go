@@ -1,0 +1,112 @@
+﻿@model IEnumerable<WebApp.Models.Eventstable>
+
+@{
+    ViewData["Title"] = "My Events";
+}
+
+
+@if (!Model.Any())
+{
+    <p>You haven't created any events yet.</p>
+}
+else
+{
+    <div class="myEvent-container">
+        <h1 class="myEvent-title">My Events</h1>
+        <table class="myEvent-table-view">
+            <thead>
+                <tr>
+                    <th>Event Name</th>
+                    <th>Category</th>
+                    <th>Status</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Venue</th>
+                    <th>Description</th>
+                    <th>Booking Username</th>
+                    <th>Location</th>
+                    <th>Image</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var eventItem in Model)
+                {
+                    <tr>
+                        <td>@eventItem.EventName</td>
+                        <td>@eventItem.Category?.Category</td>
+                        <td>@eventItem.Status</td>
+                        <td>@eventItem.StartDate.ToString("yyyy-MM-dd")</td>
+                        <td>@eventItem.EndDate.ToString("yyyy-MM-dd")</td>
+                        <td>@eventItem.Venue</td>
+                        <td>@eventItem.Description</td>
+                        <td>@eventItem.BookingUserName</td>
+                        <td>@eventItem.Location</td>
+                        <td>
+                            <img src="@(eventItem.ImageName)" alt="Event Image" class="myEvent-img" onclick="openModal(this)">
+                        </td>
+                        <td>
+                            <a asp-action="Details" asp-route-id="@eventItem.EventId" class="action-icon" title="Details">
+                                <span class="material-symbols-outlined">info</span>
+                                <span class="preview">Details</span>
+                            </a>                            @if (User.IsInRole("Admin") || User.IsInRole("Organizer"))
+                            {
+                                <a asp-action="Delete" asp-route-id="@eventItem.EventId" class="action-icon" title="Delete">
+                                    <span class="material-symbols-outlined">delete</span>
+                                    <span class="preview">Delete</span>
+                                </a>
+                                <a asp-action="Edit" asp-route-id="@eventItem.EventId" class="action-icon" title="Edit">
+                                    <span class="material-symbols-outlined">edit_square</span>
+                                    <span class="preview">Edit</span>
+                                </a>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <!-- Modal for Image Zoom -->
+        <div id="imageModal" class="modal" onclick="closeModal()">
+            <span class="close">&times;</span>
+            <img class="modal-content" id="modalImg">
+        </div>
+
+    </div>
+
+}
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const modal = document.getElementById("imageModal");
+        const modalImg = document.getElementById("modalImg");
+@*         const caption = document.getElementById("caption");
+ *@
+        // Ensure the modal is hidden on page load
+        modal.style.display = "none";
+
+        // Open modal only on image click
+        document.querySelectorAll(".myEvent-img").forEach((img) => {
+            img.addEventListener("click", () => {
+                modal.style.display = "flex"; // Show modal
+                modalImg.src = img.src; // Set modal image
+@*                 caption.innerHTML = img.alt; // Set caption
+ *@            });
+        });
+
+        // Close modal on close button click
+        document.querySelector(".close").addEventListener("click", () => {
+            modal.style.display = "none";
+        });
+
+        // Close modal on background click
+        modal.addEventListener("click", (e) => {
+            if (e.target === modal) {
+                modal.style.display = "none";
+            }
+        });
+    });
+</script>
+
+
+

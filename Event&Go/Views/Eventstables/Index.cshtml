@@ -1,5 +1,7 @@
 ﻿@model IEnumerable<WebApp.Models.Eventstable>
-
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
 
 @{
     ViewData["Title"] = "Events";
@@ -71,8 +73,10 @@
     <div class="search-cont-box">
             <div class="top-section">
                 <!-- Create Event Button -->
-                <a class="create-btn" asp-action="Create">+ Create New Event</a>
-
+                @if (User.IsInRole("Admin") || (User.IsInRole("Organizer")))
+                {
+                    <a class="create-btn" asp-action="Create">+ Create New Event</a>
+                }
                 <!-- Search Form -->
                 <form asp-action="Index" method="get" asp-controller="Eventstables" class="search-form">
                     <div class="search-options">
@@ -126,18 +130,33 @@
                                 <p class="booking-username">Booked by: @item.BookingUserName</p>
 
                                     <div class="action-icons d-flex justify-content-around">
-                                        <a asp-action="Edit" asp-route-id="@item.EventId" class="action-icon" title="Edit">
-                                            <span class="material-symbols-outlined">edit_square</span>
-                                            <span class="preview">Edit</span>
-                                        </a>
                                         <a asp-action="Details" asp-route-id="@item.EventId" class="action-icon" title="Details">
                                             <span class="material-symbols-outlined">info</span>
                                             <span class="preview">Details</span>
                                         </a>
-                                        <a asp-action="Delete" asp-route-id="@item.EventId" class="action-icon" title="Delete">
-                                            <span class="material-symbols-outlined">delete</span>
-                                            <span class="preview">Delete</span>
-                                        </a>
+
+                                        @if (SignInManager.IsSignedIn(User))
+                                        {
+                                            var currentUser = await UserManager.GetUserAsync(User);
+                                            var currentEmail = currentUser.Email;
+
+                                            if (item.CreatedBy == currentEmail || await UserManager.IsInRoleAsync(currentUser, "Admin"))
+                                            {
+                                                <a asp-action="Delete" asp-route-id="@item.EventId" class="action-icon" title="Delete">
+                                                    <span class="material-symbols-outlined">delete</span>
+                                                    <span class="preview">Delete</span>
+                                                </a>
+                                                <a asp-action="Edit" asp-route-id="@item.EventId" class="action-icon" title="Edit">
+                                                    <span class="material-symbols-outlined">edit_square</span>
+                                                    <span class="preview">Edit</span>
+                                                </a>
+                                            }
+                                         @*    else
+                                            {
+                                                <span class="text-muted">You do not have permission to modify this event.</span>
+                                            } *@
+                                        }
+                                      
                                     </div>
 
                             </div>
@@ -158,8 +177,34 @@
         }
     </div>
 
+
+    </div>
+
+    <!-- Pagination Controls -->
+    <div class="pagination-controls">
+        <button class="pagination-btn"
+        @(ViewBag.CurrentPage > 1 ? "" : "disabled")
+                onclick="location.href='@Url.Action("Index", new { page = ViewBag.CurrentPage - 1 })'">
+            Previous
+        </button>
+
+        <span class="page-info">
+            Page @ViewBag.CurrentPage / @ViewBag.TotalPages
+        </span>
+
+        <button class="pagination-btn"
+        @(ViewBag.CurrentPage < ViewBag.TotalPages ? "" : "disabled")
+                onclick="location.href='@Url.Action("Index", new { page = ViewBag.CurrentPage + 1 })'">
+            Next
+        </button>
+    </div>
+
 </div>
 </div>
+
+
+
+
 @*     make corrections to it and let it be responsive across all screen devices from mobile 300px upward, it should be responsive
  *@
 

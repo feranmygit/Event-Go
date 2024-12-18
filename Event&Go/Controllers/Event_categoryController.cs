@@ -13,7 +13,6 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Event_Go.Controllers
 {
-    [Authorize(Roles ="Admin")]
     public class Event_categoryController : Controller
     {
         private readonly AppDbContext _context;
@@ -22,6 +21,8 @@ namespace Event_Go.Controllers
         {
             _context = context;
         }
+
+        [Authorize(Roles = "Admin,Organizer")]
 
         // GET: Event_category
 
@@ -59,6 +60,7 @@ namespace Event_Go.Controllers
         }
 
 
+        [Authorize(Roles = "Admin,Organizer")]
 
         // GET: Event_category/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -77,6 +79,10 @@ namespace Event_Go.Controllers
 
             return View(event_category);
         }
+
+
+        [Authorize(Roles = "Admin")]
+
 
         // GET: Event_category/Create
         public IActionResult Create()
@@ -100,6 +106,8 @@ namespace Event_Go.Controllers
             return View(event_category);
         }
 
+        [Authorize(Roles = "Admin")]
+
         // GET: Event_category/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -115,6 +123,8 @@ namespace Event_Go.Controllers
             }
             return View(event_category);
         }
+
+        [Authorize(Roles = "Admin")]
 
         // POST: Event_category/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
@@ -194,6 +204,8 @@ namespace Event_Go.Controllers
         //}
 
 
+        [Authorize(Roles = "Admin")]
+
         // GET: Event_category/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -211,6 +223,9 @@ namespace Event_Go.Controllers
 
             return View(event_category);
         }
+
+
+        [Authorize(Roles = "Admin")]
 
         // POST: Event_category/Delete/5
         [HttpPost, ActionName("Delete")]
