@@ -14,7 +14,10 @@
                 <p class="hero-description">The ultimate platform for creating, managing, and organizing events effortlessly. Connect, collaborate, and bring your ideas to life.</p>
                 <div class="hero-buttons">
                     <a asp-action="Index" asp-controller="Eventstables" class="btn btn-primary">View Events</a>
+                       @if (User.IsInRole("Admin") || User.IsInRole("Organizer"))
+                                            {
                     <a asp-action="Create" asp-controller="Eventstables" class="btn btn-secondary">Create Event</a>
+                                            }
                 </div>
             </div>
         </section>

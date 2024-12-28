@@ -8,6 +8,8 @@
     ViewData["Title"] = "Edit";
 }
 
+<partial name="_Spinner" />
+
 <h1 class="edit-title title-blog">Edit Event</h1>
 <hr />
 
@@ -79,6 +81,14 @@
                 <select asp-for="Status" class="form-input dropdown" asp-items="ViewBag.StatusList" required></select>
                 <span asp-validation-for="Status" class="validation-message"></span>
             </div>
+            
+            <!-- Visibilty Field -->
+            <div class="form-group">
+                <label asp-for="Visibility"></label>
+                <select asp-for="Visibility" class="form-control" asp-items="ViewBag.VisibilityList">
+                    <option value="">-- Select Visibility --</option>
+                </select>
+            </div>
 
             <!-- Booking User Field -->
             <div class="form-group">
@@ -106,7 +116,7 @@
                     if (Model.CreatedBy == currentEmail || await UserManager.IsInRoleAsync(currentUser, "Admin"))
                     {
                         <!-- Show Edit and Delete buttons -->
-                                    <input type="submit" value="Save" class="btn btn-mode submit-btn" />
+                        <input type="submit" id="Submit" value="Save" class="btn btn-mode submit-btn" onclick="showSpinner()" />
 
                     }
                 }
@@ -123,7 +133,10 @@
     }
 } *@
 
+@* Script to control spinner visibility based on TempData *@
+<script>
 
+</script>
 @section Scripts {
  @*    @{
         <partial name="_ValidationScriptsPartial" />
@@ -135,6 +148,9 @@
 
             document.getElementById('ImageName').value = fileName;
         });
+
+
+    
     </script>
 }
  

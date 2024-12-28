@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using Event_Go.Models;
 
 namespace WebApp.Models
 {
@@ -41,9 +42,13 @@ namespace WebApp.Models
         [StringLength(200)]
         [DisplayName("Location")]
         public string Location { get; set; }
-
-        //[StringLength(200)]
-        //public string FromEmailAddress { get; set; }
+        
+        [Required]
+        [DisplayName("Visibility")]
+        public string Visibility { get; set; } = "Public";
+        
+        [DisplayName("Reminders")] 
+        public string Reminder { get; set; } = "";
 
         [Required]
         [EmailAddress]
@@ -76,6 +81,7 @@ namespace WebApp.Models
         public string CreatedByUserId { get; set; }
         public virtual Event_category Category { get; set; }
 
+        public ICollection<TicketRequest> TicketRequests { get; set; } = new List<TicketRequest>();
 
 
         public static ValidationResult ValidateEndDate(DateTime endDate, ValidationContext context)
@@ -104,9 +110,9 @@ namespace WebApp.Models
                 {
                     return new ValidationResult("For events starting within 3 days, the status must be 'Upcoming'.");
                 }
-                else if (instance.StartDate > today.AddDays(3) && status != "Planned")
+                else if (instance.StartDate > today.AddDays(3) && status != "Completed")
                 {
-                    return new ValidationResult("For events starting in more than 3 days, the status must be 'Planned'.");
+                    return new ValidationResult("For events starting in more than 3 days, the status must be 'Completed'.");
                 }
                 else if (instance.StartDate < today && status != "Cancelled")
                 {

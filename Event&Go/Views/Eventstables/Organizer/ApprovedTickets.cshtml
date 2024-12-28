@@ -1,0 +1,167 @@
+﻿@model IEnumerable<Event_Go.Models.TicketRequest>
+
+@{
+    ViewData["Title"] = "ApprovedTickets";
+}
+
+<div class="Event-blog Static-Heading-title">
+    <h1 class="Event-title Event-title-margin general-font">Approved Ticket Requests</h1>
+</div>
+
+@if (!Model.Any())
+{
+    <p class="Center">No approved ticket requests.</p>
+}
+else
+{
+    <div class="roles-table-wrapper role-table-gen">
+        <table class="roles-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Event Name</th>
+                    <th>Approved For</th>
+                    <th>Unique Code</th>
+                    <th>Approval Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="table-body">
+                @foreach (var request in Model)
+                {
+                    <tr>
+                        <td></td>
+                        <td><strong>@request.Event.EventName</strong></td>
+                        <td>@request.UserName</td>
+                        <td><strong>@request.UniqueCode</strong></td>
+                        <td>@request.RequestDate</td>
+                        <td>
+                            <form asp-action="DisapproveTicketRequest" method="post" style="display: inline;">
+                                <input type="hidden" name="ticketRequestId" value="@request.TicketId" />
+                                <button type="submit" class="action-link delete" onclick="return confirm('Are you sure you want to disapprove this ticket?');">
+                                    <span class="material-symbols-outlined">delete</span>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+<a class="create-btn" asp-controller="Eventstables" asp-action="ExpiredApprovedTickets">
+    View Past Tickets
+</a>
+
+<script>
+    // Function to add serial numbers to the "ID" column
+    function addSerialNumbers() {
+        const rows = document.querySelectorAll("#table-body tr");
+        rows.forEach((row, index) => {
+            row.cells[0].textContent = index + 1; // Add serial number in the first column (ID)
+        });
+    }
+
+    // Call the function when the page is loaded
+    window.onload = addSerialNumbers;
+</script>
+
+@* <form id="validateTicketForm">
+    <input type="text" id="uniqueCode" placeholder="Enter Ticket Code" required />
+    <button type="submit">Validate Ticket</button>
+</form>
+<div id="validationResult"></div>
+
+<script>
+    document.getElementById("validateTicketForm").addEventListener("submit", async function (e) {
+        e.preventDefault();
+        const uniqueCode = document.getElementById("uniqueCode").value.trim(); // Trim whitespace
+
+        console.log("Unique Code Submitted:", uniqueCode); // Debugging
+
+        if (!uniqueCode) {
+            document.getElementById("validationResult").textContent = "Please enter a valid ticket code.";
+            return;
+        }
+
+        try {
+            const response = await fetch('/Eventstables/ValidateTicket', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ uniqueCode })
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to validate ticket. Please try again.");
+            }
+
+            const result = await response.json();
+
+            const resultDiv = document.getElementById("validationResult");
+            if (result.success) {
+                resultDiv.textContent = `Valid Ticket for Event: ${result.eventName}`;
+            } else {
+                resultDiv.textContent = result.message;
+            }
+        } catch (error) {
+            console.error(error);
+            document.getElementById("validationResult").textContent = "An error occurred while validating the ticket.";
+        }
+    });
+
+</script> *@
+
+@* 
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.UserName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RequestDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UniqueCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Event)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RequestDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UniqueCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Event.BookingUserName)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.TicketId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.TicketId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.TicketId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+ *@

@@ -96,8 +96,9 @@ button[type="submit"] {
     color: #fff;
     border: none;
     border-radius: 6px;
-    font-size: 16px;
-    cursor: pointer;
+    /*    font-size: 16px;
+*/ cursor: pointer;
+    font-weight: bold;
     transition: all 0.3s ease;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
@@ -255,9 +256,17 @@ button[type="submit"] {
 /* Table Styling */
 .roles-table-wrapper {
     overflow-x: auto;
+}
+.roles-table-margin {
     margin: 10px 10%;
 }
-
+.Notify-flex-container {
+    display: flex;
+    flex-direction: row;
+    gap: 14px;
+    padding: 50px 10px;
+    width: 100%;
+}
 .roles-table {
     width: 100%;
     border-collapse: collapse;
@@ -266,7 +275,9 @@ button[type="submit"] {
     background-color: #f9f9f9;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
-
+.role-table-gen {
+    padding-inline: 10%;
+}
     .roles-table thead {
         background-color: #007BFF;
         color: white;
@@ -338,7 +349,7 @@ button[type="submit"] {
         padding: 8px 16px;
     }
     .roles-table-wrapper {
-        margin: 10px 5%;
+        margin: 10px 5% 20px 5%;
     }
     .roles-container {
         margin: 20px 5%;
@@ -363,6 +374,19 @@ button[type="submit"] {
     }
     .roles-table-wrapper {
         margin: 10px 3%;
+    }
+}
+@media (max-width: 930px) {
+    .Notify-flex-container {
+        display: flex;
+        flex-direction:column;
+        gap: 14px;
+        padding: 50px 10px;
+        width: 100%;
+    }
+
+    .Status-box {
+        width: 100%;
     }
 }
 

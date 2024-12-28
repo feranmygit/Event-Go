@@ -1,0 +1,51 @@
+﻿@model IEnumerable<Event_Go.Models.TicketRequest>
+
+@{
+    ViewData["Title"] = "ExpiredApprovedTickets";
+}
+
+
+<h2>Expired Approved Tickets</h2>
+
+@if (!Model.Any())
+{
+    <p class="Center">No past tickets.</p>
+}
+else
+{
+    <div class="roles-table-wrapper role-table-gen">
+        <table class="roles-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Event Name</th>
+                    <th>Approved For</th>
+                    <th>Unique Code</th>
+                    <th>Approval Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="table-body">
+                @foreach (var request in Model)
+                {
+                    <tr>
+                        <td></td>
+                        <td><strong>@request.Event.EventName</strong></td>
+                        <td>@request.UserName</td>
+                        <td><strong>@request.UniqueCode</strong></td>
+                        <td>@request.RequestDate</td>
+                        <td>
+                            <form asp-action="DisapproveTicketRequest" method="post" style="display: inline;">
+                                <input type="hidden" name="ticketRequestId" value="@request.TicketId" />
+                                <button type="submit" class="action-link delete" onclick="return confirm('Are you sure you want to disapprove this ticket?');">
+                                    <span class="material-symbols-outlined">delete</span>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+

@@ -1,0 +1,201 @@
+﻿@model IEnumerable<WebApp.Models.Eventstable>
+
+<h2 class="section-title Notify-box-page">General Notifications</h2>
+
+<div class="Notify-flex-container">
+<div class="Status-box">
+        <div class="Event-blog Inbox-Heading-title">
+            <h1 class="Event-title general-font">Your Ticket Request Status</h1>
+        </div>
+        @if (!Model.Any())
+        {
+            <p class="Center">You don't have any ticket status yet. Come back later!!</p>
+        }
+        else
+        {
+
+            <div class="roles-table-wrapper">
+                <table class="roles-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Event Name</th>
+                            <th>Description</th>
+                            <th>Venue</th>
+                            <th>Request Status</th>
+                            <th>Unique Code</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body">
+                        @foreach (var item in Model)
+                        {
+                            var ticketRequest = item.TicketRequests?.FirstOrDefault(tr => tr.EventId == item.EventId && tr.UserName == User.Identity.Name);
+
+                            <tr>
+                                <td></td>
+                                <td><strong>@item.EventName</strong></td>
+                                <td>@item.Description</td>
+                                <td>@item.Venue</td>
+                                @if (item.TicketRequests != null && item.TicketRequests.Any())
+                                {
+                                    @foreach (var request in item.TicketRequests.Where(tr => tr.UserName == User.Identity.Name))
+                                    {
+                                        <td>@request.Status</td>
+                                        <td>
+                                            @if (request.Status == "Approved")
+                                            {
+                                                <p><strong>@(request.UniqueCode ?? "Not Generated")</strong></p>
+                                            }
+                                        </td>
+                                    }
+
+                                }
+                                <td>
+                                    <form asp-action="RevokeTicketRequest" method="post" style="display: inline;">
+                                        <input type="hidden" name="eventId" value="@item.EventId" />
+                                        <button type="submit" class="action-link delete" onclick="return confirm('Are you sure you want to revoke your ticket request?');">
+                                            <span class="material-symbols-outlined">delete</span>
+                                        </button>
+                                    </form>
+                                        <a asp-action="Details" asp-route-id="@item.EventId" style="color: green" title="Details">
+                                        <button class=" details btn-padding" style="border: none">
+                                            <span class="material-symbols-outlined details">info</span>
+                                        </button>
+                                        </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+        }
+        <a class="create-btn" asp-controller="Eventstables" asp-action="ExpiredTickets">
+            View Expired Tickets
+        </a>
+
+   
+
+</div>
+@* <div class="container">
+    <!-- Ticket Request Status Section -->
+    <section class="ticket-status">
+        <h1 class="section-title">Your Ticket Request Status</h1>
+        @if (!Model.Any())
+        {
+            <p class="no-status">You don't have any ticket status yet. Come back later!!</p>
+        }
+        else
+        {
+            <div class="ticket-status-wrapper">
+                @foreach (var item in Model)
+                {
+                    var ticketRequest = item.TicketRequests?.FirstOrDefault(tr => tr.EventId == item.EventId && tr.UserName == User.Identity.Name);
+
+                    <div class="ticket-card">
+                        <div class="ticket-header">
+                            <strong>@item.EventName</strong>
+                        </div>
+                        <div class="ticket-details">
+                            <p><strong>Description:</strong> @item.Description</p>
+                            <p><strong>Venue:</strong> @item.Venue</p>
+                            <p><strong>Status:</strong> @ticketRequest?.Status</p>
+                            <p><strong>Code:</strong> @(ticketRequest?.UniqueCode ?? "Not Generated")</p>
+                        </div>
+                        <div class="ticket-actions">
+                            <form asp-action="RevokeTicketRequest" method="post">
+                                <input type="hidden" name="eventId" value="@item.EventId" />
+                                <button type="submit" class="btn-revoke" onclick="return confirm('Are you sure you want to revoke your ticket request?');">
+                                    Revoke
+                                </button>
+                            </form>
+                            <a asp-action="Details" asp-route-id="@item.EventId" class="btn-details">
+                                Details
+                            </a>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </section> *@
+
+    <!-- Quick Notifications Section -->
+  
+        @if (!Model.Any())
+        {
+@*             <p class="no-notifications">No notifications available.</p>
+ *@        }
+        else
+        {
+        <section class="quick-notifications">
+            <h2 class="section-title">Quick Notifications</h2>
+            <ul class="notification-list">
+                @foreach (var notification in Model)
+                {
+                     @*    <p><strong>Event:</strong> @notification.EventName</p>
+                        <p><strong>Date:</strong> @notification.StartDate.ToString("dddd, MMM dd, yyyy")</p> *@
+                        @if (!string.IsNullOrEmpty(notification.Reminder))
+
+                        {
+                    <li class="notification-item">
+                            <p><strong>Reminder - </strong> Hello, Your <strong>@notification.EventName</strong> event is happening <span>@notification.Reminder!</span> Don't missed out.</p>
+                        <p><strong>Date: </strong> @notification.StartDate.ToString("dddd, MMM dd, yyyy")</p>
+                              <a asp-action="Details" asp-route-id="@notification.EventId" class="btn-details info-size">
+                                See more info
+                            </a>
+                    </li>
+
+                        }
+
+                }
+            </ul>
+        </section>
+
+        }
+</div>
+
+@* </div>
+ *@
+
+
+@*
+@if (!Model.Any())
+{
+    <p class="Center">You don't have any ticket status yet. Come back later!!</p>
+}
+else{
+<h2>Quick Notifications</h2>
+<ul>
+    @foreach (var notification in Model)
+    {
+        <li>
+            Event: @notification.EventName <br />
+            Start Date: @notification.StartDate.ToString("dddd, MMM dd, yyyy") <br />
+            @if (!string.IsNullOrEmpty(notification.Reminder))
+            {
+            <li> Event: @notification.EventName</li>
+            <li>  Start Date: @notification.StartDate.ToString("dddd, MMM dd, yyyy") <br /></li>
+
+                <strong>Reminder: The event is happening <span>@notification.Reminder!</span> Don't missed out.</strong>
+                <a asp-action="Details" asp-route-id="@notification.EventId" class=" details btn-padding" title="Details">
+                    See more info
+                </a>
+            }
+        </li>
+    }
+</ul>
+} *@
+
+<script>
+    // Function to add serial numbers to the "ID" column
+    function addSerialNumbers() {
+        const rows = document.querySelectorAll("#table-body tr");
+        rows.forEach((row, index) => {
+            row.cells[0].textContent = index + 1; // Add serial number in the first column (ID)
+        });
+    }
+
+    // Call the function when the page is loaded
+    window.onload = addSerialNumbers;
+</script>

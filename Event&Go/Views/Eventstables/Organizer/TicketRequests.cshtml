@@ -1,0 +1,103 @@
+﻿@model IEnumerable<Event_Go.Models.TicketRequest>
+
+@{
+    ViewData["Title"] = "TicketRequests";
+}
+
+<div class="Event-blog Static-Heading-title">
+    <h1 class="Event-title Event-title-margin general-font">Pending Ticket Requests</h1>
+</div>
+
+@if (Model != null && Model.Any()){
+
+    <div class="roles-table-wrapper role-table-gen">
+        <table class="roles-table">
+            <thead>
+                <tr>
+                    <th>Event Name</th>
+                    <th>User Email</th>
+                    <th>Requested Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var request in Model)
+                {
+                    <tr>
+                        <td><strong>@request.Event.EventName</strong></td>
+                        <td>@request.UserName</td>
+                        <td>@request.RequestDate.ToString("MMMM dd, yyyy")</td>
+                        <td>
+                            <form asp-action="ProcessTicketRequest" method="post" style="display: inline;">
+                                <input type="hidden" name="requestId" value="@request.TicketId" />
+                                <button type="submit" name="action" value="accept" class="action-link edit">Accept</button>
+                                <button type="submit" name="action" value="reject" class="action-link delete" onclick="return confirm('Are you sure About your action?');">Reject</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+}
+else
+{
+    <p class="Center">No pending ticket requests.</p>
+
+}
+
+
+@* <h1>TicketRequests</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.UserName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RequestDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UniqueCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Event)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RequestDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UniqueCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Event.BookingUserName)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.TicketId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.TicketId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.TicketId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table> *@

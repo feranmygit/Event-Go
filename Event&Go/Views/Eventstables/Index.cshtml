@@ -34,9 +34,11 @@
 
 
     <div class="Event-blog">
-        <h1 class="Event-title">Explore Upcoming Events</h1>
+        <h1 class="Event-title Event-title-margin">Explore Upcoming Events</h1>
     </div>
 
+    @if (User.IsInRole("Admin") || (User.IsInRole("Organizer")))
+    {
     <header class="card-Statistics">
     <h1 style="text-align: center; padding: 20px; color: #333;">Event Status Dashboard</h1>
 </header>
@@ -58,7 +60,7 @@
         <!-- Planned Events Card -->
         <div class="card-grid planned">
             <h2>@ViewBag.PlannedCount</h2>
-            <p>Planned Events</p>
+                <p>Completed Events</p>
         </div>
 
         <!-- Cancelled Events Card -->
@@ -68,6 +70,7 @@
         </div>
     </div>
 </main>
+}
 
 <div class="create-content">
     <div class="search-cont-box">
@@ -101,19 +104,74 @@
 <div class="Event-header">
     <h1>Events</h1>
 </div>
-        <div><h1>@ViewBag.message</h1></div>
-<div class="row card-container">
-        @if (Model != null && Model.Any()){
-            @foreach (var item in Model)
-            {
-                <div class="card-contai">
-                    <div class="col-md-4 mb-4">
-                        <div class="card event-card" onclick="redirectToDetails(@item.EventId)">
-                            <div class="card-image">
-                                    <img src="@(item.ImageName)" alt="Event Image" class="img-fluid event-img">
-                                <div class="status @item.Status.ToLower()">@item.Status</div>
-                            </div>
 
+        <!-- Search Results Count -->
+        @if (!string.IsNullOrEmpty(ViewBag.SearchValue))
+        {
+            <div class="search-result-count searchCountBox">
+                @if (ViewBag.SearchCount > 0)
+                {
+                    <strong>@ViewBag.SearchCount</strong>
+                <p> event(s) found for "<strong>@ViewBag.SearchValue</strong>".</p>
+               }
+                else
+                {
+                <p>No items found for "<strong>@ViewBag.SearchValue</strong>". </p>
+                }
+           </div>
+        }
+        <div><h1>@ViewBag.message</h1></div>
+
+    @if (Model != null && Model.Any()){
+           
+                <div class="row card-container">
+                @foreach (var item in Model)
+                {
+                    <div class="card-contai">
+                    <div class="col-md-4 mb-4">
+                        <div class="card event-card">
+                            <div class="card-image">
+                                    <img src="@(item.ImageName)" alt="Event Image" class="img-fluid event-img" onclick="redirectToDetails(@item.EventId)">
+                                <div class="status @item.Status.ToLower()">@item.Status</div>
+
+                                        <!-- Event Booking Form Logic -->
+                                        @if (SignInManager.IsSignedIn(User))
+                                    {
+                                        var currentUser = await UserManager.GetUserAsync(User);
+                                        var currentEmail = currentUser.Email;
+
+                                        if (item.CreatedBy != currentEmail)
+                                        {
+                                            <div class="Event-Booking">
+                                                <form asp-action="BookEvent" method="post">
+                                                    <input type="hidden" name="eventId" value="@item.EventId" />
+                                                    <span class="Booking-btn" onclick="this.closest('form').submit()">
+                                                        <span class="material-symbols-outlined" style="vertical-align: middle;">
+                                                            favorite
+                                                        </span>
+@*                                                         <span class="btn-text">Book</span>
+ *@                                                    </span>
+                                                </form>
+                                            </div>
+                                        }
+@*                                         else
+                                        {
+                                            <div class="text-muted">You cannot book your own event.</div>
+                                        } *@
+                                    }
+
+                                    @*       <form asp-action="BookEvent" method="post">
+                                            <input type="hidden" name="eventId" value="@item.EventId" />
+                                            <span class="Booking-btn" onclick="this.closest('form').submit()">
+                                                <span class="material-symbols-outlined" style="vertical-align: middle;">
+                                                    event
+                                                </span>
+                                                <span class="btn-text">Book</span>
+
+                                            </span>
+                                        </form> *@
+@*                                     </div>
+ *@                            </div>
                             <div class="card-body">
                                 <div class="d-flex justify-content-between mb-2 venue-cont">
                                     <span class="category">@item.Category.Category</span>
@@ -154,7 +212,8 @@
                                          @*    else
                                             {
                                                 <span class="text-muted">You do not have permission to modify this event.</span>
-                                            } *@
+                                            } 
+                                            *@
                                         }
                                       
                                     </div>
@@ -164,21 +223,18 @@
                     </div>
                     <!-- Repeat the above card for other items -->
                 </div>
+                }
 
+                </div>
+         }
 
-            }
-
-        }
         else
         {
-            <div>
-                <p>No events available.</p>
-            </div>
+        <div>
+                    <p class="Center">No events available.</p>
+        </div>
         }
-    </div>
 
-
-    </div>
 
     <!-- Pagination Controls -->
     <div class="pagination-controls">

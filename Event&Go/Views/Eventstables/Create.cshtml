@@ -3,12 +3,15 @@
 @{
     ViewData["Title"] = "Create";
 }
+
+<partial name="_Spinner" />
+
 <h1 class="custom-event-title title-blog">Create Event</h1>
 <hr />
 
 <div class="custom-event-form-container">
     <div><h1>@ViewBag.message</h1></div>
-    <form asp-action="Create" method="post" enctype="multipart/form-data" class="custom-event-form">
+    <form asp-action="Create" method="post" enctype="multipart/form-data" id="eventForm" class="custom-event-form">
         <div asp-validation-summary="ModelOnly" class="custom-validation-summary"></div>
         <input type="text" asp-for="EventId" hidden="true" />
 
@@ -57,7 +60,7 @@
         <!-- Location address -->
         <div class="custom-form-group">
             <label asp-for="Location" class="custom-label"></label>
-            <input asp-for="Location" class="custom-input" placeholder="e.g ilesa" />
+            <input asp-for="Location" class="custom-input" placeholder="e.g Ilesa, Osun" />
             <span asp-validation-for="Location" class="custom-validation-message"></span>
         </div>
 
@@ -80,7 +83,10 @@
             <label asp-for="ToEmailAddress" class="custom-label"></label>
             <input asp-for="ToEmailAddress" id="ToEmailAddress" type="email" class="custom-input" placeholder="Contact@gmail.com" />
             <span asp-validation-for="ToEmailAddress" class="custom-validation-message"></span>
-        </div>   
+        </div>
+
+        <!-- Created by -->
+
         <div class="custom-form-group">
             <label asp-for="CreatedBy" class="custom-label"></label>
             <input asp-for="CreatedBy" class="custom-input" type="email" placeholder="Enter email" />
@@ -94,6 +100,16 @@
                 </span>
             </div>
         </div>
+
+        <!-- Visibility -->
+
+        <div class="custom-form-group">
+            <label for="Visibility">Visibility</label>
+            <select asp-for="Visibility" class="form-control" asp-items="ViewBag.VisibilityList">
+                <option value="">-- Select Visibility --</option>
+            </select>
+        </div>
+
         <!-- Image File -->
         <div class="custom-form-group">
             <label asp-for="ImageFile" for="ImageFile" class="custom-label"></label>
@@ -110,7 +126,7 @@
 
         <!-- Submit Button -->
         <div class="custom-form-group">
-            <input type="submit" value="Create Event" class="custom-submit-btn" />
+            <input type="submit" value="Create Event" class="custom-submit-btn" onclick="showSpinner()" />
         </div>
     </form>
 
@@ -121,9 +137,6 @@
 </div>
 
 
-@* @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-} *@
 
 @section Scripts {
     @{
@@ -144,8 +157,7 @@
 
         //     document.getElementById('FromEmailAddress').value = ToEmailAddress;
         // });
-
-      
+   
     </script>
 }
 

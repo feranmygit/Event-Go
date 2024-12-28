@@ -1,4 +1,7 @@
 ﻿@model WebApp.Models.Eventstable
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
 
 @{
     ViewData["Title"] = "Details";
@@ -41,7 +44,37 @@
             </div>
         </div>
         <div class="actions">
+                   @if (SignInManager.IsSignedIn(User))
+                                    {
+                                        var currentUser = await UserManager.GetUserAsync(User);
+                                        var currentEmail = currentUser.Email;
+
+                if (Model.CreatedBy == currentEmail || await UserManager.IsInRoleAsync(currentUser, "Admin"))
+                                        {
             <a asp-action="Edit" asp-route-id="@Model?.EventId" class="btn-mode edit-btn">Edit</a>
+                                        }
+                                    }
+            @if (SignInManager.IsSignedIn(User))
+            {
+                var currentUser = await UserManager.GetUserAsync(User);
+                var currentEmail = currentUser.Email;
+
+                if (Model.CreatedBy != currentEmail)
+                {
+                    <form asp-action="RequestTicket" method="post" style="display: inline;">
+                        <input type="hidden" name="eventId" value="@Model.EventId" />
+                        <button type="submit" class="action-link edit">Get Ticket</button>
+                    </form>
+                    <form asp-action="BookEvent" method="post" style="display: inline;">
+                        <input type="hidden" name="eventId" value="@Model.EventId" />
+                        <button type="submit" class="action-link delete">
+                            <span class="material-symbols-outlined">
+                                favorite
+                            </span>
+                        </button>
+                    </form>
+                }
+            }
             <a asp-action="Index" class="btn-mode bk-btn">Back to List</a>
         </div>
     </div>

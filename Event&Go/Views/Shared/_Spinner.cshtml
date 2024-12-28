@@ -1,0 +1,17 @@
+﻿@* _Spinner.cshtml *@
+<div id="spinner-overlay" style="display: none;">
+  <div class="spinner"></div>
+</div>
+
+
+ 
+@* Script to control spinner visibility based on TempData *@
+<script>
+    function showSpinner() {
+        const spinnerOverlay = document.getElementById("spinner-overlay");
+        if (spinnerOverlay) {
+            spinnerOverlay.style.display = "flex"; // Show the spinner
+        }
+    }
+</script>
+

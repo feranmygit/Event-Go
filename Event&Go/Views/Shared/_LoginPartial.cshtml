@@ -6,9 +6,36 @@
 <ul class="navbar-navs">
     @if (SignInManager.IsSignedIn(User))
     {
-        <li class="nav-items">
+       @*  <li class="nav-items">
             <a id="manage" class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
+        </li> *@
+        <li class="nav-items dropdown">
+            <a id="manage" class="nav-link text-dark dropdown-toggle" href="#" title="Manage">
+                Hello @UserManager.GetUserName(User)!
+            </a>
+            <ul class="dropdown-menu">
+                <li>
+                    <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index">Manage Account</a>
+                </li>
+
+                @if (User.IsInRole("User"))
+                {
+                    <li class="dropdown-rolchange">
+                        <a href="#" title="Become an Organizer" class="myevent-role" onclick="openRoleModal(this)">
+                            Become an Organizer
+                        </a>
+                    </li>
+
+
+                   @*  <li class="dropdown-item">
+                        <a asp-controller="Accounts" asp-action="BecomeOrganizer" title="Become an Organizer">
+                            Become an Organizer
+                        </a>
+                    </li> *@
+                }
+            </ul>
         </li>
+
         <li class="nav-items">
             <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
                 <button id="logout" type="submit" class="nav-link btn btn-link text-dark border-0">Logout</button>
@@ -25,7 +52,205 @@
         </li>
     }
 </ul>
+
+<!-- Modal for Image Zoom -->
+<div id="roleModal" class="modal-role" onclick="closeRoleModal()">
+ <div class="active-modal">
+        <div class="modal-body-content">
+            <p>
+                Becoming an Organizer is a permanent action. Once you become an Organizer,
+                you cannot revert to being a User. Are you sure you want to proceed?
+            </p>
+        </div>
+        <div class="modal-footer-role">
+            <button type="button" class="close-action">Cancel</button>
+            <a asp-controller="Accounts" asp-action="BecomeOrganizer" class="agreed-btn">Agree and Proceed</a>
+        </div>
+ </div>
+    <span class="close">&times;</span>
+</div>
+
+
+
+
+<style>
+   .nav-items {
+        position: relative;
+    }
+    
+        .dropdown-menu {
+        display: none;
+        position: absolute;
+     /*    top: 100%; 
+        left: 0;
+        background-color: #fff;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        list-style: none;
+        padding: 0;
+        margin: 0; */
+        z-index: 1000;
+    }
+
+        .dropdown-menu li {
+            width: 100%;
+        }
+
+        .dropdown-menu a {
+        /*     display: block;
+            padding: 10px 20px;
+            color: #333;
+            text-decoration: none; */
+            font-size: 14px;
+        }
+
+            .dropdown-menu a:hover {
+/*                 background-color: #f0f0f0;
+ */            }
+
+    .nav-items:hover .dropdown-menu {
+        display: block;
+    }
+
+    .dropdown-menu.show {
+        display: block;
+    }
+
+
+    /* Modal Styles */
+   /* Modal Styles */
+    .active-modal{
+        display:flex;
+        flex-direction:column;
+        gap:16px;
+    }
+
+    .modal-role {
+        display: none; /* Default to hidden */
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.8);
+        align-items: center;
+        justify-content: center;
+    }
+
+.modal-body-content {
+    background-color: #fff;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 400px; /* Limit modal width */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    position: relative;
+    padding: 20px;
+    margin-inline: 5%;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.modal-body-content p {
+    font-size: 16px;
+    color: #333;
+    line-height: 1.5;
+}
+
+.modal-footer-role {
+    display: flex;
+    flex-direction: column; /* Stack buttons vertically */
+    gap: 10px; /* Add space between buttons */
+    margin-top: 20px; /* Add space between content and buttons */
+    padding: 0 20px; /* Ensure buttons align properly on smaller screens */
+}
+
+    .close-action, .agreed-btn {
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+    display: inline-block;
+    width: 100%; /* Make buttons responsive */
+    box-sizing: border-box;
+}
+
+    .close-action {
+    background-color: #f44336;
+    color: #fff;
+    border: none;
+}
+
+        .close-action:hover {
+    background-color: #d32f2f;
+}
+
+.agreed-btn {
+    background-color: #4caf50;
+    color: #fff;
+    text-decoration: none;
+    text-align: center;
+    border: none;
+}
+
+.agreed-btn:hover {
+    background-color: #388e3c;
+}
+
+
+
+</style>
+
+<script>
+    document.getElementById('manage').addEventListener('click', function (e) {
+        e.preventDefault();
+        this.nextElementSibling.classList.toggle('show');
+    });
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const modal = document.getElementById("roleModal");
+
+        // Function to open the modal
+        window.openRoleModal = function () {
+            modal.style.display = "flex";
+        };
+
+        // Function to close the modal
+        window.closeRoleModal = function () {
+            modal.style.display = "none";
+        };
+
+        // Close modal when clicking outside the modal content
+        modal.addEventListener("click", (e) => {
+            if (e.target === modal) {
+                closeRoleModal();
+            }
+        });
+
+        // Close modal when clicking the Cancel button or close icon
+        document.querySelector(".closed").addEventListener("click", closeRoleModal);
+        document.querySelector(".close").addEventListener("click", closeRoleModal);
+
+        // Close modal when clicking the Agree button
+        document.querySelector(".agreed-btn").addEventListener("click", closeRoleModal);
+    });
+
+
+</script>
+
+
+
+
+
+
+
+
+
+
 @* 
+
+
+
 <ul class="navbar-navs">
     @if (SignInManager.IsSignedIn(User))
     {

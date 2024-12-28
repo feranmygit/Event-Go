@@ -1,0 +1,88 @@
+﻿@model IEnumerable<WebApp.Models.Eventstable>
+
+
+<div class="Event-blog Static-Heading-title">
+    <h1 class="Event-title Event-title-margin general-font">Your Favorites Events</h1>
+</div>
+
+@if (!Model.Any())
+{
+    <p class="Center">You don't have any Favorites events yet.</p>
+}
+else
+{
+
+    <div class="roles-table-wrapper role-table-gen">
+        <table class="roles-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Event Name</th>
+                    <th>Description</th>
+                    <th>Venue</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="table-body">
+                @foreach (var item in Model)
+                {
+                    var ticketRequest = item.TicketRequests?.FirstOrDefault(tr => tr.EventId == item.EventId && tr.UserName == User.Identity.Name);
+
+                    <tr>
+                        <td></td>
+                        <td><strong>@item.EventName</strong></td>
+                        <td>@item.Description</td>
+                        <td>@item.Venue</td>
+                        <td>@item.StartDate.ToShortDateString()</td>
+                        <td>@item.EndDate.ToShortDateString()</td>
+                        <td>
+                            <form asp-action="UnbookEvent" method="post" style="display: inline;">
+                                <input type="hidden" name="eventId" value="@item.EventId" />
+                                <button type="submit" class="action-link delete" onclick="return confirm('Are you sure you want to remove this event from your favorites?');">
+                                    <span class="material-symbols-outlined">delete</span>
+                                </button>
+                            </form>
+                            <a asp-action="Details" asp-route-id="@item.EventId" style="color: green" title="Details">
+                                <button class=" details btn-padding" style="border: none">
+                                    <span class="material-symbols-outlined details">info</span>
+                                </button>
+                            </a>
+                            @if (ticketRequest != null)
+                            {
+                                <p>Ticket Status: @ticketRequest.Status</p>
+                                @if (ticketRequest.Status == "Approved")
+                                {
+                                    <p>Unique Code: <strong>@ticketRequest.UniqueCode</strong></p>
+                                }
+                            }
+                            else
+                            {
+                                <form asp-action="RequestTicket" method="post" style="display: inline;">
+                                    <input type="hidden" name="eventId" value="@item.EventId" />
+                                    <button type="submit" class="action-link edit">Get Ticket</button>
+                                </form>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+
+
+<script>
+    // Function to add serial numbers to the "ID" column
+    function addSerialNumbers() {
+        const rows = document.querySelectorAll("#table-body tr");
+        rows.forEach((row, index) => {
+            row.cells[0].textContent = index + 1; // Add serial number in the first column (ID)
+        });
+    }
+
+    // Call the function when the page is loaded
+    window.onload = addSerialNumbers;
+</script>

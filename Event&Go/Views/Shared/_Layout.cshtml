@@ -33,17 +33,17 @@
                 <div class="navbar-redirect-links">
                     <ul class="unordered-links">
                         <li class="link-bar-items">
-                            <a class="myLinks-bar" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="myLinks-bar paddtwo" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="link-bar-items">
-                            <a class="myLinks-bar" asp-area="" asp-controller="Eventstables" asp-action="Index">Events</a>
+                            <a class="myLinks-bar paddtwo" asp-area="" asp-controller="Eventstables" asp-action="Index">Events</a>
                         </li>
-                         @if (User.IsInRole("Admin") || User.IsInRole("Organizer"))
+                        @if (User.IsInRole("Admin") || User.IsInRole("Organizer") || User.IsInRole("User"))
                         {
                             <li class="navbar">
                                 <ul class="nav-menu">
                                     <li class="nav-item">
-                                        <a href="#" class="dropdown-toggle myLinks-bar">
+                                        <a href="#" class="dropdown-toggle myLinks-bar paddone">
                                             <span>Menu</span>
                                             <span class="material-symbols-outlined">
                                                 arrow_drop_down
@@ -54,24 +54,104 @@
                                             @if (User.IsInRole("Admin") || User.IsInRole("Organizer"))
                                             {
                                                 <li>
-                                                    <a asp-area="" asp-controller="Event_category" asp-action="Index">Categories</a>
+                                                    <a asp-area="" asp-controller="Event_category" asp-action="Index">
+                                                        <span class="material-symbols-outlined">
+                                                            category
+                                                        </span>
+                                                        Categories
+                                                    </a>
                                                 </li>
                                                 <li>
-                                                    <a asp-area="" asp-controller="Eventstables" asp-action="MyEvents">Book List</a>
+                                                    <a asp-area="" asp-controller="Eventstables" asp-action="MyEvents">
+                                                        <span class="material-symbols-outlined">
+                                                            event
+                                                        </span>
+                                                        My Events
+                                                    </a>
+                                                </li>
+                                            }
+                                            @if (User.IsInRole("User") || User.IsInRole("Admin") || User.IsInRole("Organizer"))
+                                            {
+
+                                                <li>
+                                                    <a asp-area="" asp-controller="Eventstables" asp-action="UserNotification">
+                                                        <span class="material-symbols-outlined">
+                                                            favorite
+                                                        </span>
+                                                        Favorites
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a asp-area="" asp-controller="Eventstables" asp-action="Inbox">
+                                                      
+                                                        <span class="material-symbols-outlined">
+                                                            notifications
+                                                        </span>
+                                                        Notifications
+                                                      @*   @if (ViewBag.UnreadNotificationsCount > 0)
+                                                        { *@
+                                                            <span class="notification-dot">
+                                                                @ViewBag.UnreadNotificationsCount <!-- Display count of unread notifications -->
+                                                            </span>
+@*                                                         }
+ *@                                                    </a>
                                                 </li>
                                             }
                                             @if (User.IsInRole("Admin"))
                                             {
                                                 <li>
-                                                    <a asp-area="" asp-controller="AppRoles" asp-action="Index">Roles</a>
+                                                    <a asp-area="" asp-controller="AppRoles" asp-action="Index">
+                                                        <span class="material-symbols-outlined">
+                                                            group
+                                                        </span>
+                                                        Roles
+                                                    </a>
                                                 </li>
                                             }
                                         </ul>
                                     </li>
                                 </ul>
                             </li>
+                   
+                        }
+                         @if (User.IsInRole("Admin") || User.IsInRole("Organizer"))
+                        {
+                            <li class="navbar">
+                                <ul class="nav-menu">
+                                    <li class="nav-item">
+                                        <a href="#" class="dropdown-toggle myLinks-bar paddone">
+                                            <span>Bookings</span>
+                                            <span class="material-symbols-outlined">
+                                                arrow_drop_down
+                                            </span>
+                                        </a>
 
-                        }         
+                                        <ul class="dropdown-menu">
+
+
+
+                                            <li>
+                                                <a asp-area="" asp-controller="Eventstables" asp-action="TicketRequests">
+                                                    <span class="material-symbols-outlined">
+                                                        upcoming
+                                                    </span>
+                                                    Tickets Request
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a asp-area="" asp-controller="Eventstables" asp-action="ApprovedTickets" class="event-links">
+                                                    <span class="material-symbols-outlined">
+                                                        data_check
+                                                    </span>
+                                                    <span>Approved Tickets</span>
+                                                </a>
+                                            </li>
+
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
                         <!-- Login Section -->
                         <partial name="_LoginPartial" />
                     </ul>
@@ -89,33 +169,74 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+@*     <footer class="border-top footer text-muted">
         <div class="container">
             &copy; 2024 - Event_Go - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
-    </footer>
+    </footer> *@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 
+
+
+    <style>
+        /* Notification dot styles */
+        .notification-dot {
+            position: absolute;
+            top: 10px;
+            left: 28px;
+/*             right: -5px;
+ */            width: 12px;
+            height: 12px;
+            background-color: red;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            font-size: 12px;
+            line-height: 20px; /* Center the text */
+            font-weight: bold;
+        }
+
+    </style>
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const dropdownToggle = document.querySelector('.dropdown-toggle');
-            const dropdownMenu = document.querySelector('.dropdown-menu');
+            // Select all dropdown toggles and menus
+            const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
+            const dropdownMenus = document.querySelectorAll('.dropdown-menu');
 
-            dropdownToggle.addEventListener('click', function (e) {
-                e.preventDefault();
-                dropdownMenu.style.display = dropdownMenu.style.display === 'flex' ? 'none' : 'flex';
+            dropdownToggles.forEach((toggle, index) => {
+                const menu = dropdownMenus[index];
+
+                toggle.addEventListener('click', function (e) {
+                    e.preventDefault();
+
+                    // Toggle display for the current dropdown menu
+                    const isVisible = menu.style.display === 'flex';
+                    dropdownMenus.forEach(m => (m.style.display = 'none')); // Close all dropdowns
+                    menu.style.display = isVisible ? 'none' : 'flex'; // Toggle the clicked one
+                });
             });
 
-            // Close dropdown when clicking outside
+            // Close all dropdowns when clicking outside
             document.addEventListener('click', function (e) {
-                if (!dropdownToggle.contains(e.target) && !dropdownMenu.contains(e.target)) {
-                    dropdownMenu.style.display = 'none';
+                let isInsideDropdown = false;
+
+                dropdownToggles.forEach((toggle, index) => {
+                    const menu = dropdownMenus[index];
+                    if (toggle.contains(e.target) || menu.contains(e.target)) {
+                        isInsideDropdown = true;
+                    }
+                });
+
+                if (!isInsideDropdown) {
+                    dropdownMenus.forEach(m => (m.style.display = 'none')); // Close all dropdowns
                 }
             });
         });
+
 
 
         document.addEventListener('DOMContentLoaded', () => {
