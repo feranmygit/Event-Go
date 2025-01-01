@@ -4,8 +4,9 @@
     ViewData["Title"] = "ExpiredApprovedTickets";
 }
 
-
-<h2>Expired Approved Tickets</h2>
+<div class="Event-blog Static-Heading-title">
+    <h1 class="Event-title Event-title-margin general-font">Expired Approved Tickets</h1>
+</div>
 
 @if (!Model.Any())
 {
@@ -22,6 +23,7 @@ else
                     <th>Approved For</th>
                     <th>Unique Code</th>
                     <th>Approval Date</th>
+                    <th>Status</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -34,10 +36,11 @@ else
                         <td>@request.UserName</td>
                         <td><strong>@request.UniqueCode</strong></td>
                         <td>@request.RequestDate</td>
+                        <td>@request.Status</td>
                         <td>
-                            <form asp-action="DisapproveTicketRequest" method="post" style="display: inline;">
+                            <form asp-action="ExpiredApprovedTickets" method="post" style="display: inline;">
                                 <input type="hidden" name="ticketRequestId" value="@request.TicketId" />
-                                <button type="submit" class="action-link delete" onclick="return confirm('Are you sure you want to disapprove this ticket?');">
+                                <button type="submit" class="action-link delete" onclick="return confirm('Are you sure you want to delete this ticket?');">
                                     <span class="material-symbols-outlined">delete</span>
                                 </button>
                             </form>
@@ -49,3 +52,15 @@ else
     </div>
 }
 
+<script>
+    // Function to add serial numbers to the "ID" column
+    function addSerialNumbers() {
+        const rows = document.querySelectorAll("#table-body tr");
+        rows.forEach((row, index) => {
+            row.cells[0].textContent = index + 1; // Add serial number in the first column (ID)
+        });
+    }
+
+    // Call the function when the page is loaded
+    window.onload = addSerialNumbers;
+</script>

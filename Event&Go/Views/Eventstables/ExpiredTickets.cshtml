@@ -1,6 +1,8 @@
 ﻿@model IEnumerable<Event_Go.Models.TicketRequest>
 
-<h1>Expired Tickets</h1>
+<div class="Event-blog Static-Heading-title">
+    <h1 class="Event-title Event-title-margin general-font">Expired Tickets</h1>
+</div>
 
 @if (!Model.Any())
 {
@@ -8,25 +10,66 @@
 }
 else
 {
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Event Name</th>
-                <th>Start Date</th>
-                <th>End Date</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var ticket in Model)
-            {
+
+    <div class="roles-table-wrapper role-table-gen">
+        <table class="roles-table">
+            <thead>
                 <tr>
-                    <td>@ticket.Event.EventName</td>
-                    <td>@ticket.Event.StartDate.ToString("dd MMM yyyy")</td>
-                    <td>@ticket.Event.EndDate.ToString("dd MMM yyyy")</td>
-                    <td>@ticket.Status</td>
+                    <th>ID</th>
+                    <th>Event Name</th>
+                    <th>Description</th>
+                    <th>Venue</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Status</th>
+                    <th>Actions</th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody id="table-body">
+                @foreach (var item in Model)
+                {
+
+                    <tr>
+                        <td></td>
+                        <td><strong>@item.Event.EventName</strong></td>
+                        <td>@item.Event.Description</td>
+                        <td>@item.Event.Venue</td>
+                        <td>@item.Event.StartDate.ToString("dd MMM yyyy")</td>
+                        <td>@item.Event.EndDate.ToString("dd MMM yyyy")</td>
+                        <td>@item.Status</td>
+                        <td>
+                            <form asp-action="RevokeTicketRequest" method="post" style="display: inline;">
+                                <input type="hidden" name="eventId" value="@item.EventId" />
+                                <button type="submit" class="action-link delete" onclick="return confirm('Are you sure you want to delete your ticket request?');">
+                                    <span class="material-symbols-outlined">delete</span>
+                                </button>
+                            </form>
+                            <a asp-action="Details" asp-route-id="@item.EventId" style="color: green" title="Details">
+                                <button class=" details btn-padding" style="border: none">
+                                    <span class="material-symbols-outlined details">info</span>
+                                </button>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+   
+
+ 
 }
+
+<script>
+    // Function to add serial numbers to the "ID" column
+    function addSerialNumbers() {
+        const rows = document.querySelectorAll("#table-body tr");
+        rows.forEach((row, index) => {
+            row.cells[0].textContent = index + 1; // Add serial number in the first column (ID)
+        });
+    }
+
+    // Call the function when the page is loaded
+    window.onload = addSerialNumbers;
+</script>

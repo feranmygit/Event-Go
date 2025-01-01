@@ -22,6 +22,7 @@ else
                     <th>Event Name</th>
                     <th>Approved For</th>
                     <th>Unique Code</th>
+                    <th>Status</th>
                     <th>Approval Date</th>
                     <th>Actions</th>
                 </tr>
@@ -34,6 +35,7 @@ else
                         <td><strong>@request.Event.EventName</strong></td>
                         <td>@request.UserName</td>
                         <td><strong>@request.UniqueCode</strong></td>
+                        <td>@request.Status</td>
                         <td>@request.RequestDate</td>
                         <td>
                             <form asp-action="DisapproveTicketRequest" method="post" style="display: inline;">

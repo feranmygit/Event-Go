@@ -1,7 +1,4 @@
 using Event_Go.Data;
-using Hangfire;
-using Hangfire.MySql;
-using Hangfire.MySql.src;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;

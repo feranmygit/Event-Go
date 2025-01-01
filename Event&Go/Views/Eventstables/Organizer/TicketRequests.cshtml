@@ -17,6 +17,7 @@
                     <th>Event Name</th>
                     <th>User Email</th>
                     <th>Requested Date</th>
+                    <th>Status</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -26,6 +27,7 @@
                     <tr>
                         <td><strong>@request.Event.EventName</strong></td>
                         <td>@request.UserName</td>
+                        <td>@request.Status</td>
                         <td>@request.RequestDate.ToString("MMMM dd, yyyy")</td>
                         <td>
                             <form asp-action="ProcessTicketRequest" method="post" style="display: inline;">

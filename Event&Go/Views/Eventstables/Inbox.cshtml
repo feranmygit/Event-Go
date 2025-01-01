@@ -24,6 +24,7 @@
                             <th>Venue</th>
                             <th>Request Status</th>
                             <th>Unique Code</th>
+                            <th>Status</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -51,10 +52,11 @@
                                     }
 
                                 }
+                                <td>@item.Status</td>
                                 <td>
                                     <form asp-action="RevokeTicketRequest" method="post" style="display: inline;">
                                         <input type="hidden" name="eventId" value="@item.EventId" />
-                                        <button type="submit" class="action-link delete" onclick="return confirm('Are you sure you want to revoke your ticket request?');">
+                                        <button type="submit" class="action-link delete" onclick="return confirm('Are you sure you want to delete your ticket request?');">
                                             <span class="material-symbols-outlined">delete</span>
                                         </button>
                                     </form>

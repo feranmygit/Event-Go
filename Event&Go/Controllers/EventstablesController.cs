@@ -852,8 +852,8 @@ namespace Event_Go.Controllers
             var expiredRequests = await _context.TicketRequests
                 .Include(tr => tr.Event)
                 .Where(tr => tr.Event.CreatedBy == organizerName
-                             && tr.Status == "Approved"
-                             && tr.Event.EndDate < currentDate)
+                             && tr.Status == "Expired"
+                             && tr.Event.StartDate < currentDate && tr.Event.EndDate < currentDate)
                 .ToListAsync();
 
             return View("Organizer/ExpiredApprovedTickets", expiredRequests);
