@@ -13,6 +13,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using Event_Go.Models;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace Event_Go.Controllers
 {
@@ -30,7 +31,7 @@ namespace Event_Go.Controllers
 
 
 
-        public async Task<IActionResult> Index(string searchBy, string SearchValue, int page = 1, int pageSize = 4)
+        public async Task<IActionResult> Index(string searchBy, string SearchValue, int page = 1, int pageSize = 8)
         {
             DateTime today = DateTime.Today;
 
@@ -184,7 +185,9 @@ namespace Event_Go.Controllers
                 // Set TempData success message
                 //TempData["error"] = "Form submitted failed!";
                 //return View(eventstable);
-               
+                // Return the same view if validation fails
+              
+
             }
 
 
@@ -241,7 +244,7 @@ namespace Event_Go.Controllers
                     Body = eventstable.Description,
                     IsBodyHtml = true
                 };
-                message.To.Add(eventstable.ToEmailAddress);
+                message.To.Add(eventstable.CreatedBy);
                 message.Attachments.Add(new Attachment(file.OpenReadStream(), file.FileName));
 
                 using SmtpClient mailClient = new SmtpClient(Host)
@@ -519,7 +522,7 @@ namespace Event_Go.Controllers
             return View(userEvents);
         }
 
-
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> BookEvent(int eventId)
         {
@@ -815,7 +818,7 @@ namespace Event_Go.Controllers
             {
                 return NotFound();
             }
-
+             
             // Update ticket status to "Disapproved" or revert back to "Pending"
             ticketRequest.Status = "Rejected"; // Or "Disapproved" based on your logic
             ticketRequest.UniqueCode = "";  // Remove the unique code if needed
@@ -860,8 +863,22 @@ namespace Event_Go.Controllers
         }
 
 
+        //[Authorize(Roles = "Admin,Organizer")]
+        //public async Task<IActionResult> HideTicket(int id)
+        //{
+        //    var ticket = await _context.TicketRequests.FindAsync(id);
+        //    if (ticket != null)
+        //    {
+        //        ticket.IsHidden = true;
+        //        _context.TicketRequests.Update(ticket);
+        //        await _context.SaveChangesAsync();
+        //    }
+        //    return RedirectToAction(nameof(ExpiredApprovedTickets));
+        //}
 
-        private async Task SendEmailAsync(string toEmail, string subject, string body)
+
+
+        private async Task SendEmailAsync(string CreatedBy, string subject, string body)
         {
             var myAppConfig = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
 
@@ -886,7 +903,7 @@ namespace Event_Go.Controllers
                 Body = body,
                 IsBodyHtml = true
             };
-            message.To.Add(toEmail);
+            message.To.Add(CreatedBy);
 
             await mailClient.SendMailAsync(message);
         }

@@ -1,5 +1,6 @@
 ﻿@model IEnumerable<WebApp.Models.Eventstable>
 @using Microsoft.AspNetCore.Identity
+@using System.Security.Claims
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
 
@@ -7,26 +8,26 @@
     ViewData["Title"] = "Events";
 }
 <div class="all-padding">
-<div class="image-slider-container">
-    <div class="image-slider">
-        <img src="~/image-animate/3oqqafoi.png" alt="Image 1">
-        <img src="~/image-animate/m6s17abs.png" alt="Image 2" />
-        <img src="~/image-animate/se15fc7e.png" alt="Image 3" />
-        <img src="~/image-animate/ptjbrueq.png" alt="Image 4" />
-    </div>
+    <div class="image-slider-container">
+        <div class="image-slider">
+            <img src="~/image-animate/3oqqafoi.png" alt="Image 1">
+            <img src="~/image-animate/m6s17abs.png" alt="Image 2" />
+            <img src="~/image-animate/se15fc7e.png" alt="Image 3" />
+            <img src="~/image-animate/ptjbrueq.png" alt="Image 4" />
+        </div>
 
-    <!-- Navigation Buttons -->
-    <button class="slider-nav prev" onclick="prevSlide()">&#10094;</button>
-    <button class="slider-nav next" onclick="nextSlide()">&#10095;</button>
+        <!-- Navigation Buttons -->
+        <button class="slider-nav prev" onclick="prevSlide()">&#10094;</button>
+        <button class="slider-nav next" onclick="nextSlide()">&#10095;</button>
 
-    <!-- Dots for Indicators -->
-    <div class="dots-container">
-        <span class="dot" onclick="goToSlide(0)"></span>
-        <span class="dot" onclick="goToSlide(1)"></span>
-        <span class="dot" onclick="goToSlide(2)"></span>
-        <span class="dot" onclick="goToSlide(3)"></span>
+        <!-- Dots for Indicators -->
+        <div class="dots-container">
+            <span class="dot" onclick="goToSlide(0)"></span>
+            <span class="dot" onclick="goToSlide(1)"></span>
+            <span class="dot" onclick="goToSlide(2)"></span>
+            <span class="dot" onclick="goToSlide(3)"></span>
+        </div>
     </div>
-</div>
 
 
 
@@ -135,12 +136,15 @@
                                 <div class="status @item.Status.ToLower()">@item.Status</div>
 
                                         <!-- Event Booking Form Logic -->
-                                        @if (SignInManager.IsSignedIn(User))
-                                    {
-                                        var currentUser = await UserManager.GetUserAsync(User);
-                                        var currentEmail = currentUser.Email;
+@*                                         @if (SignInManager.IsSignedIn(User))
+ *@                                    @{
+                                        // var currentUser = await UserManager.GetUserAsync(User);
+                                        // var currentEmail = currentUser.Email;
+                                        var currentEmail = User.Identity.IsAuthenticated
+                                        ? User.FindFirstValue(ClaimTypes.Email)
+                                        : null;
 
-                                        if (item.CreatedBy != currentEmail)
+                                        if (currentEmail == null || item.CreatedBy != currentEmail)
                                         {
                                             <div class="Event-Booking">
                                                 <form asp-action="BookEvent" method="post">
@@ -196,8 +200,8 @@
                                         @if (SignInManager.IsSignedIn(User))
                                         {
                                             var currentUser = await UserManager.GetUserAsync(User);
-                                            var currentEmail = currentUser.Email;
-
+@*                                             var currentEmail = currentUser.Email;
+ *@
                                             if (item.CreatedBy == currentEmail || await UserManager.IsInRoleAsync(currentUser, "Admin"))
                                             {
                                                 <a asp-action="Delete" asp-route-id="@item.EventId" class="action-icon" title="Delete">

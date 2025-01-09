@@ -36,9 +36,9 @@ else
                         <td>@request.UserName</td>
                         <td><strong>@request.UniqueCode</strong></td>
                         <td>@request.RequestDate</td>
-                        <td>@request.Status</td>
+                        <td class="expired-tick">@request.Status</td>
                         <td>
-                            <form asp-action="ExpiredApprovedTickets" method="post" style="display: inline;">
+                            <form asp-action="DisapproveTicketRequest" method="post" style="display: inline;">
                                 <input type="hidden" name="ticketRequestId" value="@request.TicketId" />
                                 <button type="submit" class="action-link delete" onclick="return confirm('Are you sure you want to delete this ticket?');">
                                     <span class="material-symbols-outlined">delete</span>

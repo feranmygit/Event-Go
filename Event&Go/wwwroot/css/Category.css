@@ -270,7 +270,8 @@ button[type="submit"] {
 .roles-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 14px;
+/*    table-layout:fixed;
+*/    font-size: 14px;
     margin-bottom: 20px;
     background-color: #f9f9f9;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -387,6 +388,10 @@ button[type="submit"] {
 
     .Status-box {
         width: 100%;
+    }
+
+    .quick-notifications {
+        width: 98%
     }
 }
 

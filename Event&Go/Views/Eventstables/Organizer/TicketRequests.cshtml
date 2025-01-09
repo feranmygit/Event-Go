@@ -4,6 +4,9 @@
     ViewData["Title"] = "TicketRequests";
 }
 
+<partial name="_Spinner" />
+
+
 <div class="Event-blog Static-Heading-title">
     <h1 class="Event-title Event-title-margin general-font">Pending Ticket Requests</h1>
 </div>
@@ -30,7 +33,7 @@
                         <td>@request.Status</td>
                         <td>@request.RequestDate.ToString("MMMM dd, yyyy")</td>
                         <td>
-                            <form asp-action="ProcessTicketRequest" method="post" style="display: inline;">
+                            <form asp-action="ProcessTicketRequest" method="post" id="eventForm" style="display: inline;">
                                 <input type="hidden" name="requestId" value="@request.TicketId" />
                                 <button type="submit" name="action" value="accept" class="action-link edit">Accept</button>
                                 <button type="submit" name="action" value="reject" class="action-link delete" onclick="return confirm('Are you sure About your action?');">Reject</button>
@@ -103,3 +106,26 @@ else
 }
     </tbody>
 </table> *@
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const form = document.getElementById("eventForm");
+        const spinner = document.getElementById("spinner-overlay");
+
+        // Handle form submission
+        form.addEventListener("submit", (event) => {
+            // Check form validity
+            if (!form.checkValidity()) {
+                event.preventDefault(); // Prevent form submission
+                form.classList.add("was-validated");
+                spinner.style.display = "none";
+            } else {
+                // Show spinner if valid
+                spinner.style.display = "flex";
+            }
+        });
+
+    });
+
+
+</script>

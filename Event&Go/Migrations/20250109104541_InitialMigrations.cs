@@ -240,7 +240,9 @@ namespace Event_Go.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Location = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    ToEmailAddress = table.Column<string>(type: "longtext", nullable: false)
+                    Visibility = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Reminder = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Status = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -261,6 +263,56 @@ namespace Event_Go.Migrations
                         column: x => x.CategoryId,
                         principalTable: "Event_categories",
                         principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "EventBookings",
+                columns: table => new
+                {
+                    BookingId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    EventId = table.Column<int>(type: "int", nullable: false),
+                    UserName = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    BookingDate = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EventBookings", x => x.BookingId);
+                    table.ForeignKey(
+                        name: "FK_EventBookings_Eventstables_EventId",
+                        column: x => x.EventId,
+                        principalTable: "Eventstables",
+                        principalColumn: "EventId",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "TicketRequests",
+                columns: table => new
+                {
+                    TicketId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    EventId = table.Column<int>(type: "int", nullable: false),
+                    UserName = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    RequestDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    Status = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    UniqueCode = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TicketRequests", x => x.TicketId);
+                    table.ForeignKey(
+                        name: "FK_TicketRequests_Eventstables_EventId",
+                        column: x => x.EventId,
+                        principalTable: "Eventstables",
+                        principalColumn: "EventId",
                         onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
@@ -303,9 +355,19 @@ namespace Event_Go.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_EventBookings_EventId",
+                table: "EventBookings",
+                column: "EventId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Eventstables_CategoryId",
                 table: "Eventstables",
                 column: "CategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TicketRequests_EventId",
+                table: "TicketRequests",
+                column: "EventId");
         }
 
         /// <inheritdoc />
@@ -327,13 +389,19 @@ namespace Event_Go.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Eventstables");
+                name: "EventBookings");
+
+            migrationBuilder.DropTable(
+                name: "TicketRequests");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Eventstables");
 
             migrationBuilder.DropTable(
                 name: "Event_categories");

@@ -36,7 +36,7 @@ else
                         <td>@item.Event.Venue</td>
                         <td>@item.Event.StartDate.ToString("dd MMM yyyy")</td>
                         <td>@item.Event.EndDate.ToString("dd MMM yyyy")</td>
-                        <td>@item.Status</td>
+                        <td class="expired-tick">@item.Status</td>
                         <td>
                             <form asp-action="RevokeTicketRequest" method="post" style="display: inline;">
                                 <input type="hidden" name="eventId" value="@item.EventId" />

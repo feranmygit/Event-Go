@@ -28,7 +28,7 @@
         </div>
 
         <!-- Form -->
-        <form asp-action="Edit" method="post" enctype="multipart/form-data" class="edit-form">
+        <form asp-action="Edit" method="post" enctype="multipart/form-data" id="eventForm" class="edit-form">
             @Html.AntiForgeryToken()
             <input type="hidden" asp-for="EventId" />
 
@@ -142,13 +142,30 @@
         <partial name="_ValidationScriptsPartial" />
     } *@
 
-    <script type="text/javascript">
-        document.getElementById('ImageFile').addEventListener('change', function () {
-            var fileName = this.files[0].name; 
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const form = document.getElementById("eventForm");
+            const spinner = document.getElementById("spinner-overlay");
 
-            document.getElementById('ImageName').value = fileName;
+            // Handle form submission
+            form.addEventListener("submit", (event) => {
+                // Check form validity
+                if (!form.checkValidity()) {
+                    event.preventDefault(); // Prevent form submission
+                    form.classList.add("was-validated");
+                    spinner.style.display = "none";
+                } else {
+                    // Show spinner if valid
+                    spinner.style.display = "flex";
+                }
+            });
+
+            // Update ImageName field when a file is selected
+            document.getElementById("ImageFile").addEventListener("change", function () {
+                const fileName = this.files[0]?.name || "";
+                document.getElementById("ImageName").value = fileName;
+            });
         });
-
 
     
     </script>

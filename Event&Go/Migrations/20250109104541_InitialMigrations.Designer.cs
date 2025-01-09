@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Event_Go.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241219134933_AddedTicketRequestsModel")]
-    partial class AddedTicketRequestsModel
+    [Migration("20250109104541_InitialMigrations")]
+    partial class InitialMigrations
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -359,6 +359,10 @@ namespace Event_Go.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("varchar(200)");
 
+                    b.Property<string>("Reminder")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime(6)");
 
@@ -366,14 +370,14 @@ namespace Event_Go.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<string>("ToEmailAddress")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
                     b.Property<string>("Venue")
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("varchar(200)");
+
+                    b.Property<string>("Visibility")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.HasKey("EventId");
 

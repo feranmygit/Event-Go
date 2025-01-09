@@ -11,7 +11,7 @@
 
 <div class="custom-event-form-container">
     <div><h1>@ViewBag.message</h1></div>
-    <form asp-action="Create" method="post" enctype="multipart/form-data" id="eventForm" class="custom-event-form">
+    <form asp-action="Create" method="post" enctype="multipart/form-data" id="eventForm" class="custom-event-form" novalidate>
         <div asp-validation-summary="ModelOnly" class="custom-validation-summary"></div>
         <input type="text" asp-for="EventId" hidden="true" />
 
@@ -19,77 +19,77 @@
         <!-- Event Name -->
         <div class="custom-form-group">
             <label asp-for="EventName" class="custom-label"></label>
-            <input asp-for="EventName" class="custom-input" placeholder="Enter event name" />
+            <input asp-for="EventName" class="custom-input" placeholder="Enter event name" required/>
             <span asp-validation-for="EventName" class="custom-validation-message"></span>
         </div>
 
         <!-- Description -->
         <div class="custom-form-group">
             <label asp-for="Description" class="custom-label"></label>
-            <textarea asp-for="Description" class="custom-input" cols="20" rows="5" placeholder="Enter event description" ></textarea>
+            <textarea asp-for="Description" class="custom-input" cols="20" rows="5" placeholder="Enter event description" required></textarea>
             <span asp-validation-for="Description" class="custom-validation-message"></span>
         </div>
 
         <!-- Category -->
         <div class="custom-form-group">
             <label asp-for="Category" class="custom-label"></label>
-            <select asp-for="CategoryId" class="custom-select" asp-items="ViewBag.CategoryList"></select>
+            <select asp-for="CategoryId" class="custom-select" asp-items="ViewBag.CategoryList" required></select>
         </div>
 
         <!-- Start Date -->
         <div class="custom-form-group">
             <label asp-for="StartDate" class="custom-label"></label>
-            <input asp-for="StartDate" class="custom-input" type="date" />
+            <input asp-for="StartDate" class="custom-input" type="date" required />
             <span asp-validation-for="StartDate" class="custom-validation-message"></span>
         </div>
 
         <!-- End Date -->
         <div class="custom-form-group">
             <label asp-for="EndDate" class="custom-label"></label>
-            <input asp-for="EndDate" class="custom-input" type="date" />
+            <input asp-for="EndDate" class="custom-input" type="date" required />
             <span asp-validation-for="EndDate" class="custom-validation-message"></span>
         </div>
 
         <!-- Venue -->
         <div class="custom-form-group">
             <label asp-for="Venue" class="custom-label"></label>
-            <input asp-for="Venue" class="custom-input" placeholder="Enter address" />
+            <input asp-for="Venue" class="custom-input" placeholder="Enter address" required />
             <span asp-validation-for="Venue" class="custom-validation-message"></span>
         </div>
 
         <!-- Location address -->
         <div class="custom-form-group">
             <label asp-for="Location" class="custom-label"></label>
-            <input asp-for="Location" class="custom-input" placeholder="e.g Ilesa, Osun" />
+            <input asp-for="Location" class="custom-input" placeholder="e.g Ilesa, Osun" required />
             <span asp-validation-for="Location" class="custom-validation-message"></span>
         </div>
 
         <!-- Status -->
         <div class="custom-form-group">
             <label asp-for="Status" class="custom-label"></label>
-            <select asp-for="Status" class="custom-select" asp-items="ViewBag.StatusList"></select>
+            <select asp-for="Status" class="custom-select" asp-items="ViewBag.StatusList" required></select>
         </div>
 
         <!-- Booking Username -->
         <div class="custom-form-group">
             <label asp-for="BookingUserName" class="custom-label"></label>
-            <input asp-for="BookingUserName" class="custom-input" placeholder="Enter username" />
+            <input asp-for="BookingUserName" class="custom-input" placeholder="Enter username" required />
             <span asp-validation-for="BookingUserName" class="custom-validation-message"></span>
         </div>
 
           <!-- Booking User Email -->
-  
-        <div class="custom-form-group">
+  @* 
+        <div class="custom-form-group" style="display:none;">
             <label asp-for="ToEmailAddress" class="custom-label"></label>
-            <input asp-for="ToEmailAddress" id="ToEmailAddress" type="email" class="custom-input" placeholder="Contact@gmail.com" />
+            <input asp-for="ToEmailAddress" id="FromEmailAddress" type="email" class="custom-input" placeholder="Contact@gmail.com" />
             <span asp-validation-for="ToEmailAddress" class="custom-validation-message"></span>
-        </div>
+        </div> *@
 
         <!-- Created by -->
 
         <div class="custom-form-group">
             <label asp-for="CreatedBy" class="custom-label"></label>
-            <input asp-for="CreatedBy" class="custom-input" type="email" placeholder="Enter email" />
+            <input asp-for="CreatedBy" id="ToEmailAddress" class="custom-input" type="email" placeholder="Enter email" required />
             <span asp-validation-for="CreatedBy" class="custom-validation-message"></span>
             <div class="privacy-Notice">
                 <span class="material-symbols-outlined">
@@ -105,7 +105,7 @@
 
         <div class="custom-form-group">
             <label for="Visibility">Visibility</label>
-            <select asp-for="Visibility" class="form-control" asp-items="ViewBag.VisibilityList">
+            <select asp-for="Visibility" class="form-control" asp-items="ViewBag.VisibilityList" required>
                 <option value="">-- Select Visibility --</option>
             </select>
         </div>
@@ -113,20 +113,20 @@
         <!-- Image File -->
         <div class="custom-form-group">
             <label asp-for="ImageFile" for="ImageFile" class="custom-label"></label>
-            <input type="file" id="ImageFile" name="file" class="custom-input" />
+            <input type="file" id="ImageFile" name="file" class="custom-input" required />
             <span asp-validation-for="ImageFile" class="custom-validation-message"></span>
         </div>
 
          <!-- Event Image Name -->
         <div class="custom-form-group">
             <label asp-for="ImageName" class="custom-label"></label>
-            <input asp-for="ImageName" class="custom-input" disabled/>
+            <input asp-for="ImageName" class="custom-input" disabled required />
             <span asp-validation-for="ImageName" class="custom-validation-message"></span>
         </div>
 
         <!-- Submit Button -->
         <div class="custom-form-group">
-            <input type="submit" value="Create Event" class="custom-submit-btn" onclick="showSpinner()" />
+            <input type="submit" value="Create Event" class="custom-submit-btn" />
         </div>
     </form>
 
@@ -138,26 +138,42 @@
 
 
 
+
 @section Scripts {
     @{
         <partial name="_ValidationScriptsPartial" />
     }
-    <script type="text/javascript">
-        // This function will be triggered when the file is selected
-        document.getElementById('ImageFile').addEventListener('change', function () {
-            // Get the file name without the extension
-            var fileName = this.files[0].name; // Get the selected file name
 
-            // Set the ImageName input's value to the file name
-            document.getElementById('ImageName').value = fileName;
-        }); 
-        
-        // document.getElementById('ToEmailAddress').addEventListener('change', function () {
-        //     var ToEmailAddress = this.value; 
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const form = document.getElementById("eventForm");
+            const spinner = document.getElementById("spinner-overlay");
 
-        //     document.getElementById('FromEmailAddress').value = ToEmailAddress;
-        // });
-   
+            // Handle form submission
+            form.addEventListener("submit", (event) => {
+                // Check form validity
+                if (!form.checkValidity()) {
+                    event.preventDefault(); // Prevent form submission
+                    form.classList.add("was-validated");
+                    spinner.style.display = "none";
+                } else {
+                    // Show spinner if valid
+                    spinner.style.display = "flex";
+                }
+            });
+
+            // Update ImageName field when a file is selected
+            document.getElementById("ImageFile").addEventListener("change", function () {
+                const fileName = this.files[0]?.name || "";
+                document.getElementById("ImageName").value = fileName;
+            });
+
+            // // Sync ToEmailAddress and FromEmailAddress fields
+            // document.getElementById("ToEmailAddress").addEventListener("change", function () {
+            //     document.getElementById("FromEmailAddress").value = this.value;
+            // });
+        });
     </script>
+
 }
 

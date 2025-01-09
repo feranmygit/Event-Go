@@ -1,5 +1,6 @@
 ﻿@model WebApp.Models.Eventstable
 @using Microsoft.AspNetCore.Identity
+@using System.Security.Claims
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
 
@@ -65,15 +66,38 @@
                         <input type="hidden" name="eventId" value="@Model.EventId" />
                         <button type="submit" class="action-link edit">Get Ticket</button>
                     </form>
-                    <form asp-action="BookEvent" method="post" style="display: inline;">
+                   @*  <form asp-action="BookEvent" method="post" style="display: inline;">
                         <input type="hidden" name="eventId" value="@Model.EventId" />
                         <button type="submit" class="action-link delete">
                             <span class="material-symbols-outlined">
                                 favorite
                             </span>
                         </button>
-                    </form>
+                    </form> *@
                 }
+            }
+            @{
+                // var currentUser = await UserManager.GetUserAsync(User);
+                // var currentEmail = currentUser.Email;
+                var currentEmails = User.Identity.IsAuthenticated
+                ? User.FindFirstValue(ClaimTypes.Email)
+                : null;
+
+                if (currentEmails == null || Model.CreatedBy != currentEmails)
+                {
+                        <form asp-action="BookEvent" method="post" style="display: inline;">
+                            <input type="hidden" name="eventId" value="@Model.EventId" />
+                            <button type="submit" class="action-link delete">
+                                <span class="material-symbols-outlined">
+                                    favorite
+                                </span>
+                            </button>
+                        </form>
+                }
+                @*                                         else
+            {
+            <div class="text-muted">You cannot book your own event.</div>
+            } *@
             }
             <a asp-action="Index" class="btn-mode bk-btn">Back to List</a>
         </div>

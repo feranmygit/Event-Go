@@ -2944,12 +2944,13 @@ body {
 
 /* Quick Notifications Section */
 .quick-notifications {
-    margin-inline: 10px;
+    margin-inline: 1%;
     background-color: #f9f9f9; /* Light gray background */
     border: 1px solid #ddd; /* Optional: Adds a border for definition */
     padding: 10px; /* Adds space inside the container */
     border-radius: 8px; /* Optional: Rounds the corners */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 40%
 }
 .Status-box{
     width:120%;
@@ -2980,7 +2981,10 @@ body {
     .general-font{
         font-size:22px;
     }
-.Notify-box-page{
+.expired-tick{
+    color:red;
+}
+.Notify-box-page {
     margin: 120px 10px 0 10px;
 }
 .notification-item .btn-details {
