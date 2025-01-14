@@ -113,16 +113,23 @@
         <!-- Image File -->
         <div class="custom-form-group">
             <label asp-for="ImageFile" for="ImageFile" class="custom-label"></label>
-            <input type="file" id="ImageFile" name="file" class="custom-input" required />
+            <input type="file" id="ImageFile" name="file" class="custom-input" accept="image/*" onchange="previewImage(event)" required />
             <span asp-validation-for="ImageFile" class="custom-validation-message"></span>
         </div>
 
          <!-- Event Image Name -->
-        <div class="custom-form-group">
+        <div class="custom-form-group" style="display:none;">
             <label asp-for="ImageName" class="custom-label"></label>
             <input asp-for="ImageName" class="custom-input" disabled required />
             <span asp-validation-for="ImageName" class="custom-validation-message"></span>
         </div>
+
+         <!-- Event Image Preview On Upload -->
+        <div class="custom-form-group container" id="previewContainer">
+            No image selected
+        </div>
+
+
 
         <!-- Submit Button -->
         <div class="custom-form-group">
@@ -138,10 +145,24 @@
 
 
 
+<style>
+    .container{
+        border: 2px dashed #888;
+        border-radius: 10px;
+        overflow: hidden;
+        width: 300px;
+        height: 300px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom:20px;
+
+    }
+</style>
 
 @section Scripts {
     @{
-        <partial name="_ValidationScriptsPartial" />
+                            <partial name="_ValidationScriptsPartial" />
     }
 
     <script>
@@ -172,6 +193,32 @@
             // document.getElementById("ToEmailAddress").addEventListener("change", function () {
             //     document.getElementById("FromEmailAddress").value = this.value;
             // });
+
+
+            // Attach the previewImage function
+            document.getElementById("ImageFile").addEventListener("change", previewImage);
+
+
+            function previewImage(event) {
+                const file = event.target.files[0];
+                const previewContainer = document.getElementById("previewContainer");
+
+                if (file) {
+                    // Check if the file is an image
+                    if (file.type.startsWith("image/")) {
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            previewContainer.innerHTML = `<img src="${e.target.result}" alt="Preview" style="max-width: 100%; height: auto; border: 1px solid #ccc; border-radius: 8px; padding: 5px;" />`;
+                        };
+                        reader.readAsDataURL(file);
+                    } else {
+                        previewContainer.innerHTML = `<p style="color: red;">Unsupported file format. Please upload an image.</p>`;
+                    }
+                } else {
+                    previewContainer.innerHTML = `<p>No image selected</p>`;
+                }
+            }
+
         });
     </script>
 

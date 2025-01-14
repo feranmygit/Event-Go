@@ -4,14 +4,75 @@
 @{
     ViewData["Title"] = "Create Roles";
 }
-<h1 >Create Roles</h1>
-<hr />
 
-<form method="post">
+
+@* <form method="post">
     <div class="mb-3">
         <label asp-for="Name" class="form-label"></label>
         <input asp-for="Name" class="form-control" id="exampleFormControlInput1">
         <span asp-validation-for="Name"></span>
     </div>
     <button type="submit">Save</button>
-</form>
+</form> *@
+
+
+<partial name="_Spinner" />
+
+<h1 class="custom-event-title title-blog">Create Role</h1>
+<hr />
+
+<div class="custom-event-form-container">
+    <div><h1>@ViewBag.message</h1></div>
+    <form asp-action="Create" method="post" enctype="multipart/form-data" id="eventForm" class="custom-event-form" novalidate>
+        <div asp-validation-summary="ModelOnly" class="custom-validation-summary"></div>
+        <input type="text" asp-for="Id" hidden="true" />
+
+
+        <!-- Event Name -->
+        <div class="custom-form-group">
+            <label asp-for="Name" class="custom-label"></label>
+            <input asp-for="Name" class="custom-input" placeholder="Enter event name" required />
+            <span asp-validation-for="Name" class="custom-validation-message"></span>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="custom-form-group">
+            <input type="submit" value="Create Role" class="custom-submit-btn" />
+        </div>
+    </form>
+
+    <!-- Back to List Button -->
+    <div class="custom-back-link">
+        <a asp-action="Index" class="custom-back-btn">Back to List</a>
+    </div>
+</div>
+
+
+
+
+@section Scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const form = document.getElementById("eventForm");
+            const spinner = document.getElementById("spinner-overlay");
+
+            // Handle form submission
+            form.addEventListener("submit", (event) => {
+                // Check form validity
+                if (!form.checkValidity()) {
+                    event.preventDefault(); // Prevent form submission
+                    form.classList.add("was-validated");
+                    spinner.style.display = "none";
+                } else {
+                    // Show spinner if valid
+                    spinner.style.display = "flex";
+                }
+            });
+        });
+    </script>
+
+}

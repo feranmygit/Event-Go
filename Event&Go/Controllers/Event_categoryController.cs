@@ -101,6 +101,7 @@ namespace Event_Go.Controllers
             {
                 _context.Add(event_category);
                 await _context.SaveChangesAsync();
+                TempData["success"] = "A new category was created successfully";
                 return RedirectToAction(nameof(Index));
             }
             return View(event_category);
@@ -144,6 +145,7 @@ namespace Event_Go.Controllers
                 {
                     _context.Update(event_category);
                     await _context.SaveChangesAsync();
+                    TempData["success"] = "The category was updated successfully";
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -239,6 +241,7 @@ namespace Event_Go.Controllers
             }
 
             await _context.SaveChangesAsync();
+            TempData["success"] = "A category was deleted successfully";
             return RedirectToAction(nameof(Index));
         }
 

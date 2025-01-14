@@ -4,6 +4,8 @@
     ViewData["Title"] = "Delete";
 }
 
+<partial name="_Spinner" />
+
 <h1 class="edit-title danger-delete-top">Delete Event</h1>
 <hr />
 
@@ -46,9 +48,9 @@
             </div>
         </div>
         <div class="actions">
-            <form asp-action="Delete">
-                <input type="hidden" asp-for="EventId" />
-                <input type="submit" value="Delete" class="btn-mode delete-btn" /> |
+            <form asp-action="Delete" enctype="multipart/form-data" id="eventForm" class="custom-event-form" novalidate>
+                <input type="hidden" asp-for="EventId" required />
+                <input type="submit" value="Delete" class="btn-mode delete-btn" /> 
                 <a asp-action="Index" class="btn-mode bk-btn">Back to List</a>
             </form>
         </div>

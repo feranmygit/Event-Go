@@ -31,7 +31,7 @@ namespace Event_Go.Controllers
 
 
 
-        public async Task<IActionResult> Index(string searchBy, string SearchValue, int page = 1, int pageSize = 8)
+        public async Task<IActionResult> Index(string searchBy, string SearchValue, int page = 1, int pageSize = 4)
         {
             DateTime today = DateTime.Today;
 

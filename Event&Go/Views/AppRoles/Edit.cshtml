@@ -1,0 +1,63 @@
+﻿@model Microsoft.AspNetCore.Identity.IdentityRole
+
+@{
+    ViewData["Title"] = "Edit Role";
+}
+
+<partial name="_Spinner" />
+
+
+<h1 class="custom-event-title title-blog">Edit Role</h1>
+<hr />
+
+<div class="custom-event-form-container">
+    <form asp-action="Edit" method="post" enctype="multipart/form-data" id="eventForm" class="custom-event-form" novalidate>
+        <input type="hidden" name="id" value="@Model.Id" />
+        <div class="custom-form-group">
+            <label for="roleName" class="custom-label">Role Name</label>
+            <input type="text" id="roleName" name="roleName" class="custom-input" value="@Model.Name" placeholder="Enter new role name" required />
+            <span asp-validation-for="@Model.Name" class="custom-validation-message"></span>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="custom-form-group">
+            <input type="submit" value="Save Changes" class="custom-submit-btn" />
+        </div>
+    </form>
+
+    <!-- Back to List Button -->
+    <div class="custom-back-link">
+        <a asp-action="Index" class="custom-back-btn">Cancel</a>
+    </div>
+
+</div>
+
+
+
+
+@section Scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const form = document.getElementById("eventForm");
+            const spinner = document.getElementById("spinner-overlay");
+
+            // Handle form submission
+            form.addEventListener("submit", (event) => {
+                // Check form validity
+                if (!form.checkValidity()) {
+                    event.preventDefault(); // Prevent form submission
+                    form.classList.add("was-validated");
+                    spinner.style.display = "none";
+                } else {
+                    // Show spinner if valid
+                    spinner.style.display = "flex";
+                }
+            });
+        });
+    </script>
+
+}

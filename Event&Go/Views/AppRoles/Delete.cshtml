@@ -1,0 +1,49 @@
+﻿@model Microsoft.AspNetCore.Identity.IdentityRole
+
+@{
+    ViewData["Title"] = "Delete Role";
+}
+<partial name="_Spinner" />
+
+<div class="category-details-container">
+    <div class="category-details-card">
+        <h2 class="danger-delete">Delete Role</h2>
+        <p>Are you sure you want to delete the role <strong class="danger-delete">@Model.Name</strong>?</p>
+
+        <div class="category-details-actions">
+            <form asp-action="DeleteConfirmed" method="post" enctype="multipart/form-data" id="eventForm" class="custom-event-form" novalidate>
+                <input type="hidden" name="id" value="@Model.Id" required />
+                <input type="submit" value="Delete" class="btn-mode delete-btn" />
+                <a asp-action="Index" class="action-btn back-btn">Cancel</a>
+        </form>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const form = document.getElementById("eventForm");
+            const spinner = document.getElementById("spinner-overlay");
+
+            // Handle form submission
+            form.addEventListener("submit", (event) => {
+                // Check form validity
+                if (!form.checkValidity()) {
+                    event.preventDefault(); // Prevent form submission
+                    form.classList.add("was-validated");
+                    spinner.style.display = "none";
+                } else {
+                    // Show spinner if valid
+                    spinner.style.display = "flex";
+                }
+            });
+        });
+    </script>
+
+}
