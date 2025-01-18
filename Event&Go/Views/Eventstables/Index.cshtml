@@ -94,13 +94,14 @@
                         </div>
                     </div>
                     <div class="search-box">
-                        <input type="text" id="SearchValue" name="SearchValue" placeholder="Search events or users" class="search-input">
+                        <input type="text" id="SearchValue" name="SearchValue" placeholder="Search events or users" class="search-input" oninput="searchByname()">
                     </div>
                     <button type="submit" class="search-btn">Search</button>
                 </form>
             </div>
         </div>
-
+@*         <div id="resultsContainer" class="results-container"></div>
+ *@
 
 <div class="Event-header">
     <h1>Events</h1>
@@ -124,111 +125,10 @@
         <div><h1>@ViewBag.message</h1></div>
 
     @if (Model != null && Model.Any()){
-           
-                <div class="row card-container">
-                @foreach (var item in Model)
-                {
-                    <div class="card-contai">
-                    <div class="col-md-4 mb-4">
-                        <div class="card event-card">
-                            <div class="card-image">
-                                    <img src="@(item.ImageName)" alt="Event Image" class="img-fluid event-img" onclick="redirectToDetails(@item.EventId)">
-                                <div class="status @item.Status.ToLower()">@item.Status</div>
 
-                                        <!-- Event Booking Form Logic -->
-@*                                         @if (SignInManager.IsSignedIn(User))
- *@                                    @{
-                                        // var currentUser = await UserManager.GetUserAsync(User);
-                                        // var currentEmail = currentUser.Email;
-                                        var currentEmail = User.Identity.IsAuthenticated
-                                        ? User.FindFirstValue(ClaimTypes.Email)
-                                        : null;
-
-                                        if (currentEmail == null || item.CreatedBy != currentEmail)
-                                        {
-                                            <div class="Event-Booking">
-                                                <form asp-action="BookEvent" method="post">
-                                                    <input type="hidden" name="eventId" value="@item.EventId" />
-                                                    <span class="Booking-btn" onclick="this.closest('form').submit()">
-                                                        <span class="material-symbols-outlined" style="vertical-align: middle;">
-                                                            favorite
-                                                        </span>
-@*                                                         <span class="btn-text">Book</span>
- *@                                                    </span>
-                                                </form>
-                                            </div>
-                                        }
-@*                                         else
-                                        {
-                                            <div class="text-muted">You cannot book your own event.</div>
-                                        } *@
-                                    }
-
-                                    @*       <form asp-action="BookEvent" method="post">
-                                            <input type="hidden" name="eventId" value="@item.EventId" />
-                                            <span class="Booking-btn" onclick="this.closest('form').submit()">
-                                                <span class="material-symbols-outlined" style="vertical-align: middle;">
-                                                    event
-                                                </span>
-                                                <span class="btn-text">Book</span>
-
-                                            </span>
-                                        </form> *@
-@*                                     </div>
- *@                            </div>
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between mb-2 venue-cont">
-                                    <span class="category">@item.Category.Category</span>
-                                    <div class="venue-label">
-                                        <label class="card-text">Venue:</label>
-                                        <span class="venue">@item.Venue</span>
-                                    </div>
-                                </div>
-
-                                <h5 class="card-title event-name">@item.EventName</h5>
-
-                                <p class="card-text event-description">@item.Description</p>
-
-                                <p class="booking-username">Booked by: @item.BookingUserName</p>
-
-                                    <div class="action-icons d-flex justify-content-around">
-                                        <a asp-action="Details" asp-route-id="@item.EventId" class="action-icon" title="Details">
-                                            <span class="material-symbols-outlined">info</span>
-                                            <span class="preview">Details</span>
-                                        </a>
-
-                                        @if (SignInManager.IsSignedIn(User))
-                                        {
-                                            var currentUser = await UserManager.GetUserAsync(User);
-@*                                             var currentEmail = currentUser.Email;
- *@
-                                            if (item.CreatedBy == currentEmail || await UserManager.IsInRoleAsync(currentUser, "Admin"))
-                                            {
-                                                <a asp-action="Delete" asp-route-id="@item.EventId" class="action-icon" title="Delete">
-                                                    <span class="material-symbols-outlined">delete</span>
-                                                    <span class="preview">Delete</span>
-                                                </a>
-                                                <a asp-action="Edit" asp-route-id="@item.EventId" class="action-icon" title="Edit">
-                                                    <span class="material-symbols-outlined">edit_square</span>
-                                                    <span class="preview">Edit</span>
-                                                </a>
-                                            }
-                                         @*    else
-                                            {
-                                                <span class="text-muted">You do not have permission to modify this event.</span>
-                                            } 
-                                            *@
-                                        }
-                                      
-                                    </div>
-
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Repeat the above card for other items -->
-                </div>
-                }
-
+            <div class="row card-container" >
+                <!-- Add the Partial view here -->
+                @await Html.PartialAsync("_EventListPartial", Model)
                 </div>
          }
 
@@ -262,6 +162,38 @@
 </div>
 </div>
 
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const searchInput = document.getElementById("SearchValue");
+        const searchByRadios = document.querySelectorAll("input[name='searchBy']");
+        const resultsContainer = document.querySelector(".row");
+
+        async function fetchFilteredResults() {
+            const searchValue = searchInput.value.trim();
+            const searchBy = document.querySelector("input[name='searchBy']:checked").value;
+
+            try {
+                const response = await fetch(`/Eventstables/Index?searchBy=${encodeURIComponent(searchBy)}&SearchValue=${encodeURIComponent(searchValue)}`, {
+                    headers: { "X-Requested-With": "XMLHttpRequest" }
+                });
+
+                if (!response.ok) {
+                    throw new Error("Failed to fetch search results.");
+                }
+
+                const resultsHtml = await response.text();
+                resultsContainer.innerHTML = resultsHtml;
+            } catch (error) {
+                console.error("Error fetching filtered results:", error);
+                resultsContainer.innerHTML = "<div class='alert alert-danger'>Error loading results. Please try again.</div>";
+            }
+        }
+
+        // Trigger search dynamically
+        searchInput.addEventListener("input", fetchFilteredResults);
+        searchByRadios.forEach(radio => radio.addEventListener("change", fetchFilteredResults));
+    });
+</script>
 
 
 

@@ -123,6 +123,11 @@ namespace Event_Go.Controllers
                 .Take(pageSize)
                 .ToListAsync();
 
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                return PartialView("_EventListPartial", events); // Return partial view for AJAX
+            }
+
             ViewBag.CurrentPage = page;
             ViewBag.TotalPages = totalPages;
 
@@ -165,7 +170,12 @@ namespace Event_Go.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Eventstable eventstable, IFormFile file)
         {
-         
+            if (eventstable.StartDate > eventstable.EndDate)
+            {
+                ModelState.AddModelError("EndDate", "End Date must be later than Start Date.");
+                ViewBag.message = "Email not send! Validations error.";
+                return View(eventstable);
+            }
 
             if (!ModelState.IsValid)
             {
@@ -775,11 +785,12 @@ namespace Event_Go.Controllers
         public async Task<IActionResult> ApprovedTickets()
         {
             var organizerName = User.Identity.Name;
+            var currentDate = DateTime.Now;
 
             // Fetch approved ticket requests for events organized by the current organizer
             var approvedRequests = await _context.TicketRequests
                 .Include(tr => tr.Event)
-                .Where(tr => tr.Event.CreatedBy == organizerName && tr.Status == "Approved")
+                .Where(tr => tr.Event.CreatedBy == organizerName && tr.Status == "Approved" && tr.Event.EndDate >= currentDate)
                 .ToListAsync();
 
             return View("Organizer/ApprovedTickets", approvedRequests);

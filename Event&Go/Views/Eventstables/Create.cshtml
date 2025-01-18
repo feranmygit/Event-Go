@@ -10,7 +10,7 @@
 <hr />
 
 <div class="custom-event-form-container">
-    <div><h1>@ViewBag.message</h1></div>
+    <div><h2 style="color:red; margin-bottom:10px;">@ViewBag.message</h2></div>
     <form asp-action="Create" method="post" enctype="multipart/form-data" id="eventForm" class="custom-event-form" novalidate>
         <div asp-validation-summary="ModelOnly" class="custom-validation-summary"></div>
         <input type="text" asp-for="EventId" hidden="true" />
@@ -149,9 +149,9 @@
     .container{
         border: 2px dashed #888;
         border-radius: 10px;
-        overflow: hidden;
+        /*   overflow: hidden;
         width: 300px;
-        height: 300px;
+        height: 300px; */
         display: flex;
         align-items: center;
         justify-content: center;
@@ -208,7 +208,7 @@
                     if (file.type.startsWith("image/")) {
                         const reader = new FileReader();
                         reader.onload = (e) => {
-                            previewContainer.innerHTML = `<img src="${e.target.result}" alt="Preview" style="max-width: 100%; height: auto; border: 1px solid #ccc; border-radius: 8px; padding: 5px;" />`;
+                            previewContainer.innerHTML = `<img src="${e.target.result}" alt="Preview" style="max-width: 100%; height: auto; padding: 5px;" />`;
                         };
                         reader.readAsDataURL(file);
                     } else {
