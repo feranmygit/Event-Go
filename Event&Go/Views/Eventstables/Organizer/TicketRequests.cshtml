@@ -17,17 +17,19 @@
         <table class="roles-table">
             <thead>
                 <tr>
+                    <th>ID</th>
                     <th>Event Name</th>
                     <th>User Email</th>
-                    <th>Requested Date</th>
                     <th>Status</th>
+                    <th>Requested Date</th>
                     <th>Actions</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="table-body">
                 @foreach (var request in Model)
                 {
                     <tr>
+                        <td></td>
                         <td><strong>@request.Event.EventName</strong></td>
                         <td>@request.UserName</td>
                         <td>@request.Status</td>
@@ -44,68 +46,17 @@
             </tbody>
         </table>
     </div>
-
 }
 else
 {
-    <p class="Center">No pending ticket requests.</p>
+    <div class="Center">
+        <img src="~/image-animate/undraw_no-data_ig65.svg" style="height:200px;" />
+        <p>No pending ticket request.</p>
+    </div>
 
 }
 
 
-@* <h1>TicketRequests</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.UserName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.RequestDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Status)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UniqueCode)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Event)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.UserName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.RequestDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UniqueCode)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Event.BookingUserName)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.TicketId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.TicketId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.TicketId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table> *@
 
 <script>
     document.addEventListener("DOMContentLoaded", () => {
@@ -127,5 +78,15 @@ else
 
     });
 
+    // Function to add serial numbers to the "ID" column
+    function addSerialNumbers() {
+        const rows = document.querySelectorAll("#table-body tr");
+        rows.forEach((row, index) => {
+            row.cells[0].textContent = index + 1; // Add serial number in the first column (ID)
+        });
+    }
 
+    // Call the function when the page is loaded
+    window.onload = addSerialNumbers;
 </script>
+

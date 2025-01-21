@@ -564,7 +564,7 @@ namespace Event_Go.Controllers
             _context.EventBookings.Add(booking);
             await _context.SaveChangesAsync();
 
-            TempData["success"] = "Event booked successfully! Kindly see the details in your WishLists";
+            TempData["success"] = "Event booked successfully! Kindly see the details in your favorites";
             return RedirectToAction(nameof(Index));
         }
 
@@ -589,7 +589,7 @@ namespace Event_Go.Controllers
             _context.EventBookings.Remove(booking);
             await _context.SaveChangesAsync();
 
-            TempData["success"] = "You have successfully unbooked the event.";
+            TempData["success"] = "You have successfully removed the event.";
             return RedirectToAction(nameof(UserNotification));
         }
 

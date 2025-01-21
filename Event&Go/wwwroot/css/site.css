@@ -1268,14 +1268,18 @@ input[type="radio"]:checked + .radio-label {
     /* Main container for login page */
     /* General body styling */
     .log-in-box {
-        padding-block: 90px;
         display: flex;
         justify-content: center;
         align-items: center;
         background-size: cover;
         background-position: center;
     }
-
+.log-in-spacing {
+    padding-block: 120px;
+}
+.reg-in-spacing {
+    padding-block: 40px;
+}
     .login-img {
         background-image: url('../image-animate/loginimg.jpg');
     }

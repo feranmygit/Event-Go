@@ -5,7 +5,7 @@
     ViewData["Title"] = "Log in";
 }
 
-<div class="log-in-box  login-img">
+<div class="log-in-box  login-img log-in-spacing">
     <div class="login-container-box">
         <div class="login-form-box">
             <form id="account" method="post">
@@ -38,9 +38,9 @@
                     <div class="form-group-box">
                         <button id="login-submit" type="submit" class="btn-submit-box">Log in</button>
                     </div>
-                    <p><a id="forgot-password" asp-page="./ForgotPassword">Forgot your password?</a></p>
-                    <p><a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a></p>
-                    <p><a id="resend-confirmation" asp-page="./ResendEmailConfirmation">Resend email confirmation</a></p>
+                     <p><a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a></p>
+                   @*  <p><a id="forgot-password" asp-page="./ForgotPassword">Forgot your password?</a></p>
+                    <p><a id="resend-confirmation" asp-page="./ResendEmailConfirmation">Resend email confirmation</a></p> *@
                 </div>
             </form>
         </div>

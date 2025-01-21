@@ -86,8 +86,20 @@
         </div> *@
 
         <!-- Created by -->
-
         <div class="custom-form-group">
+            <label asp-for="CreatedBy" class="custom-label"></label>
+            <input asp-for="CreatedBy"
+                   id="ToEmailAddress"
+                   class="custom-input"
+                   type="email"
+                   placeholder="Enter email"
+                   value="@User.Identity.Name"
+                   readonly />
+            <span asp-validation-for="CreatedBy" class="custom-validation-message"></span>
+        </div>
+
+
+   @*      <div class="custom-form-group">
             <label asp-for="CreatedBy" class="custom-label"></label>
             <input asp-for="CreatedBy" id="ToEmailAddress" class="custom-input" type="email" placeholder="Enter email" required />
             <span asp-validation-for="CreatedBy" class="custom-validation-message"></span>
@@ -99,7 +111,7 @@
                     Ensure your email matched the registered email address
                 </span>
             </div>
-        </div>
+        </div> *@
 
         <!-- Visibility -->
 

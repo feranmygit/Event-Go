@@ -13,13 +13,14 @@
             <a id="manage" class="nav-link text-dark dropdown-toggle" href="#" title="Manage">
                 Hello @UserManager.GetUserName(User)!
             </a>
-            <ul class="dropdown-menu">
-                <li>
-                    <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index">Manage Account</a>
-                </li>
-
-                @if (User.IsInRole("User"))
+             @if (User.IsInRole("User"))
                 {
+            <ul class="dropdown-menu">
+             @*    <li>
+                    <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index">Manage Account</a>
+                </li> *@
+
+               
                     <li class="dropdown-rolchange">
                         <a href="#" title="Become an Organizer" class="myevent-role" onclick="openRoleModal(this)">
                             Become an Organizer
@@ -32,8 +33,9 @@
                             Become an Organizer
                         </a>
                     </li> *@
-                }
+              
             </ul>
+            }
         </li>
 
         <li class="nav-items">
